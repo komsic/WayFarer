@@ -1,0 +1,27 @@
+{
+  "name": "wayfarer",
+  "version": "1.0.0",
+  "description": "WayFarer is a public bus transportation booking server",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/komsic/WayFarer.git"
+  },
+  "keywords": [
+    "booking",
+    "transport",
+    "node",
+    "mocha",
+    "chai",
+    "express"
+  ],
+  "author": "komsic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/komsic/WayFarer/issues"
+  },
+  "homepage": "https://github.com/komsic/WayFarer#readme"
+}
