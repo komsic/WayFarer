@@ -5,7 +5,10 @@
   "main": "bankend/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon bankend/app.js"
+    "dev": "nodemon ./backend/app.js --exec babel-node",
+    "clean": "rm -rf dist && mkdir dist",
+    "build": "npm run clean && babel backend -d ./dist",
+    "start": "npm run build && node ./dist/app.js"
   },
   "repository": {
     "type": "git",
@@ -26,11 +29,17 @@
   },
   "homepage": "https://github.com/komsic/WayFarer#readme",
   "dependencies": {
+    "@babel/polyfill": "^7.4.4",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.5.0",
+    "@babel/core": "^7.5.0",
+    "@babel/node": "^7.5.0",
+    "@babel/preset-env": "^7.5.0",
+    "@babel/register": "^7.4.4",
     "eslint": "^6.0.1",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-import": "^2.18.0",
