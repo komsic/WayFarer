@@ -5,7 +5,10 @@
   "main": "bankend/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon bankend/app.js"
+    "dev": "nodemon ./backend/app.js --exec babel-node",
+    "clean": "rm -rf dist && mkdir dist",
+    "build": "npm run clean && babel backend -d ./dist",
+    "start": "npm run build && node ./dist/app.js"
   },
   "repository": {
     "type": "git",
