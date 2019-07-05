@@ -4,7 +4,7 @@
   "description": "WayFarer is a public bus transportation booking server",
   "main": "bankend/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --timeout 10000 --require @babel/register --exit",
     "dev": "nodemon ./backend/app.js --exec babel-node",
     "clean": "rm -rf dist && mkdir dist",
     "build": "npm run clean && babel backend -d ./dist",
@@ -40,9 +40,12 @@
     "@babel/node": "^7.5.0",
     "@babel/preset-env": "^7.5.0",
     "@babel/register": "^7.4.4",
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "eslint": "^6.0.1",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-import": "^2.18.0",
+    "mocha": "^6.1.4",
     "nodemon": "^1.19.1"
   },
   "engines": {
