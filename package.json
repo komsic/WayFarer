@@ -11,7 +11,8 @@
     "start": "npm run build && node ./dist/app.js",
     "cover": "nyc report --reporter=text-lcov > lcov.info",
     "coveralls": "coveralls < lcov.info",
-    "coverage": "npm run cover && npm run coveralls"
+    "codeclimate": "codeclimate-test-reporter < lcov.info",
+    "coverage": "npm run cover && npm run coveralls && npm run codeclimate"
   },
   "repository": {
     "type": "git",
@@ -45,6 +46,7 @@
     "@babel/register": "^7.4.4",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "codeclimate-test-reporter": "^0.5.1",
     "coveralls": "^3.0.4",
     "eslint": "^6.0.1",
     "eslint-config-airbnb-base": "^13.2.0",
