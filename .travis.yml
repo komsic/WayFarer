@@ -1,9 +1,13 @@
 language: node_js
 node_js:
- - "stable"
+- stable
 install: npm install
+addons:
+  code_climate:
+      repo_token:
+        secure: "HTcMZNbwn56FVOhRHhifgsuL00I0DtXtYIFFOCh9pV31CA5DEZG+TB3h4I7CYsWf1H1GemYopQpEUuhcy9X/6yoVjexrMVj0CV05zavSUCY+CDT52UccJefxhsjm+xIVsvoRu+3YYQBL0gdYIIML0tszhCgLMvM3VprGWgJdfIfKEdi9xxZWrjkk5ubHk3YgVvIK0vKPeNFPwGPiAMhXlkwpGLtonkoN/bWXV5OV5I8UQRnWeSaFqi+0VA7ANydJwe91tyFu7byXwvG4B3gEmNSiju14bHpDsb/gAlpz+0TaHoi/iy/RBP5JjJQrQTm6mHufVfuXVjAkx7tax2SkJchOimSVVOzB47vHsGsWO0UsFkvJJh9TfsJ+Bm3qmeV9f6VdBvtAJn6vdWEdHsE7HaG4m0xucAjz/1kYdrpJ6LLbH8Z6rS5LV21PAl8qKLXQwzPCYPhkVIJIqN9GI3FwskiDuHFUIVwJbs9bYIJMiFs52XPD5ddwngLC1zDO1NKV5JTenUYayE2rRuz9Rj/brUI9HZe5Fixt3kLOIYhj6uCabKLaFzypxfEgweftWmdb6T1vZhHAviH+L/VipRph9JUnVmihkfBaWqYRsZqVd3i+upbZYhryiFmy3boIv8u2o8xKtFB0vqISf+PTXsgHCJeChyWb2P+6mTplyIs0Vgw="
 cache:
   directories:
-    - "node_modules"
+  - node_modules
 after_success:
-  - npm run coverage
+- npm run coverage
