@@ -9,6 +9,8 @@
     "clean": "rm -rf dist && mkdir dist",
     "build": "npm run clean && babel backend -d ./dist",
     "start": "npm run build && node ./dist/app.js",
+    "db:migrate": "babel-node ./backend/db/migrations/migrate.js",
+    "db:unmigrate": "babel-node ./backend/db/migrations/unmigrate.js",
     "cover": "nyc report --reporter=text-lcov > lcov.info",
     "coveralls": "coveralls < lcov.info",
     "codeclimate": "codeclimate-test-reporter < lcov.info",
