@@ -1,0 +1,23 @@
+[
+  {
+    "number_plate": "XYZ 190 OBO",
+    "manufacturer": "Toyota",
+    "model": "Diver",
+    "year": 2015,
+    "capacity": 32
+  },
+  {
+    "number_plate": "ABC 145 LPM",
+    "manufacturer": "Volvo",
+    "model": "Slack",
+    "year": 2013,
+    "capacity": 64
+  },
+  {
+    "number_plate": "QSI 126 VND",
+    "manufacturer": "KIA",
+    "model": "Zoro",
+    "year": 2019,
+    "capacity": 18
+  }
+]

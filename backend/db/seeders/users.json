@@ -1,0 +1,30 @@
+[
+  {
+    "email": "rand@example.com",
+    "first_name": "Rand",
+    "last_name": "Althur",
+    "password": "rand@example.com",
+    "is_admin": "True"
+  },
+  {
+    "email": "mat@example.com",
+    "first_name": "Matrim",
+    "last_name": "Cauthor",
+    "password": "mat@example.com",
+    "is_admin": "False"
+  },
+  {
+    "email": "perrin@example.com",
+    "first_name": "Perrin",
+    "last_name": "Aybara",
+    "password": "perrin@example.com",
+    "is_admin": "False"
+  },
+  {
+    "email": "koms@gmail.com",
+    "first_name": "Micheal",
+    "last_name": "Kayode",
+    "password": "sdfsdffsdf",
+    "is_admin": "False"
+  }
+]

@@ -1,0 +1,27 @@
+[
+
+  {
+    "bus_id": 1,
+    "origin": "olodo",
+    "destination": "ogunpa",
+    "trip_date": "2020-07-09",
+    "fare": 1500,
+    "status": "active"
+  },
+  {
+    "bus_id": 2,
+    "origin": "ayegun",
+    "destination": "beere",
+    "trip_date": "2020-07-13",
+    "fare": 900,
+    "status": "active"
+  },
+  {
+    "bus_id": 3,
+    "origin": "gate",
+    "destination": "gbagi",
+    "trip_date": "2020-07-19",
+    "fare": 800,
+    "status": "active"
+  }
+]
