@@ -5,3 +5,4 @@ dist
 coverage
 lcov.info
 .env
+api

@@ -1,0 +1,120 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"version": "1.0.0",
+		"title": "WayFarer API Documentation"
+	},
+	"host": "localhost:9001",
+	"basePath": "/",
+	"schemes": [
+		"http"
+	],
+	"consumes": [
+		"application/json"
+	],
+	"produces": [
+		"application/json"
+	],
+	"paths": {
+		"/auth/signup": {
+			"post": {
+				"tags": [
+					"Users"
+				],
+				"description": "Create user account",
+				"operationId": "signup",
+				"parameters": [
+					{
+						"in": "body",
+						"name": "user",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/User"
+						},
+						"description": "The email of the new user"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/SignUpResponse"
+						}
+					},
+					"default": {
+						"description": "Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"User": {
+			"type": "object",
+			"required": [
+				"email",
+				"password",
+				"first_name",
+				"last_name",
+				"is_admin"
+			],
+			"properties": {
+				"email": {
+					"type": "string"
+				},
+				"password": {
+					"type": "string"
+				},
+				"first_name": {
+					"type": "string"
+				},
+				"last_name": {
+					"type": "string"
+				},
+				"is_admin": {
+					"type": "boolean"
+				}
+			}
+		},
+		"SignUpResponse": {
+			"type": "object",
+			"properties": {
+				"status": {
+					"type": "string",
+					"description": "The response status"
+				},
+				"data": {
+					"type": "object",
+					"properties": {
+						"user_id": {
+							"type": "integer",
+							"description": "The user id"
+						},
+						"is_admin": {
+							"type": "boolean",
+							"description": "The user admin status"
+						},
+						"token": {
+							"type": "string",
+							"description": "The user alloted token for subsequent authentications"
+						}
+					}
+				}
+			}
+		},
+		"ErrorResponse": {
+			"type": "object",
+			"properties": {
+				"status": {
+					"type": "string"
+				},
+				"error": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}
