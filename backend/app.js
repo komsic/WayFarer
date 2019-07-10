@@ -2,6 +2,8 @@ import '@babel/polyfill';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDoc from './api-doc/swagger.json';
 import REDIRECT_MESSAGE from './utils/constants';
 import routes from './routes';
 
@@ -9,6 +11,8 @@ const app = express();
 app.use(cors('*'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.get('/', (_req, res) => {
   res.send(`Welcome to the Wayfarer API Service. ${REDIRECT_MESSAGE}`);
