@@ -6,5 +6,6 @@ import HashPassword from '../../../utils/middlewares/hash-password';
 const router = Router();
 
 router.post('/signup', Validators.validateSignUp, HashPassword.hash, UserController.signUp);
+router.post('/signin', Validators.validateSignIn, UserController.signIn);
 
 export default router;

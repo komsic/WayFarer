@@ -1,6 +1,7 @@
 import UserService from '../services/user';
 import ResponseHandler from '../utils/response-handler';
 import Token from '../utils/middlewares/token';
+import HashPassword from '../utils/middlewares/hash-password';
 
 export default class UserController {
   static async signUp(req, res) {
@@ -10,12 +11,31 @@ export default class UserController {
 
       ResponseHandler.sendResponse(res, 201, false, user);
     } catch (error) {
-      const { message, code } = error;
-      const isServerError = code[0] === '0' && code[1] === '8';
-      const statusCode = isServerError ? 500 : 422;
-      const data = isServerError ? 'Internal Server Error' : message;
-
-      ResponseHandler.sendResponse(res, statusCode, true, data);
+      ResponseHandler.handleError(res, error);
     }
+  }
+
+  static async signIn(req, res) {
+    try {
+      const { email, password } = req.body;
+      const user = await UserService.findByEmail(email);
+      if (!HashPassword.compare(password, user.password)) {
+        return ResponseHandler.sendResponse(res, 401, true,
+          'Authentication Failed: Password is not correct');
+      }
+
+      const { is_admin: isAdmin, id } = user;
+      const token = Token.generateToken(user);
+
+      return ResponseHandler.sendResponse(res, 200, false, {
+        token,
+        is_admin: isAdmin,
+        user_id: id,
+      });
+    } catch (error) {
+      ResponseHandler.handleError(res, error);
+    }
+
+    return null;
   }
 }

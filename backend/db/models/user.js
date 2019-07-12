@@ -8,4 +8,10 @@ export default class User {
   static createUser(email, firstName, lastName, password, isAdmin) {
     return db.query(insertQuery, [email, firstName, lastName, password, isAdmin]);
   }
+
+  static findByEmail(email) {
+    return db.query(`SELECT * FROM users
+    WHERE email = $1;
+    `, [email]);
+  }
 }
