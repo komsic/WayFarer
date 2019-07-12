@@ -11,4 +11,11 @@ export default class UserValidator {
       is_admin: JoiValidator.getBooleanSchema().default(false),
     });
   }
+
+  static getSignInSchema() {
+    return Joi.object({
+      email: JoiValidator.getEmailSchema().required(),
+      password: JoiValidator.getPasswordSchema().required(),
+    });
+  }
 }

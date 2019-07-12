@@ -1,4 +1,5 @@
 import User from '../db/models/user';
+import ResponseHandler from '../utils/response-handler';
 
 export default class UserService {
   static createNewUser({
@@ -9,10 +10,19 @@ export default class UserService {
         .then((data) => {
           resolve(data.rows[0]);
         }).catch((err) => {
-          const { detail, code } = err;
-          const error = new Error(detail);
-          error.code = code;
-          reject(error);
+          reject(ResponseHandler.extractError(err));
+        });
+    });
+  }
+
+  static findByEmail(email) {
+    return new Promise((resolve, reject) => {
+      User.findByEmail(email)
+        .then((data) => {
+          if (data.rowCount === 0) {
+            reject(new Error('Email does not exist'));
+          }
+          resolve(data.rows[0]);
         });
     });
   }

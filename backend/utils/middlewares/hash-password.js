@@ -7,4 +7,8 @@ export default class HashPassword {
 
     return next();
   }
+
+  static compare(loggedInPassword, userPassword) {
+    return bcrypt.compareSync(loggedInPassword, userPassword);
+  }
 }

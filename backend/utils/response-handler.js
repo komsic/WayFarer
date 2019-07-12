@@ -10,4 +10,16 @@ export default class ResponseHandler {
 
     return response;
   }
+
+  static handleError(res, error) {
+    this.sendResponse(res, 422, true, error.message);
+  }
+
+  static extractError(err) {
+    const { detail, code } = err;
+    const error = new Error(detail);
+    error.code = code;
+
+    return error;
+  }
 }

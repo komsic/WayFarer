@@ -26,10 +26,10 @@
 		"/auth/signup": {
 			"post": {
 				"tags": [
-					"Users"
+					"User"
 				],
 				"description": "Create user account",
-				"operationId": "signup",
+				"operationId": "signUp",
 				"parameters": [
 					{
 						"in": "body",
@@ -38,7 +38,7 @@
 						"schema": {
 							"$ref": "#/definitions/User"
 						},
-						"description": "The email of the new user"
+						"description": "The details of the new user"
 					}
 				],
 				"responses": {
@@ -68,9 +68,70 @@
 					}
 				}
 			}
+		},
+		"/auth/signin": {
+			"post": {
+				"tags": [
+					"User"
+				],
+				"description": "Login a user",
+				"operationId": "signIn",
+				"parameters": [
+					{
+						"in": "body",
+						"name": "sign_in_credential",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/SignInCredential"
+						},
+						"description": "The sigin credentials of the new user"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/SignUpResponse"
+						}
+					},
+					"400": {
+						"description": "Bad Input Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"401": {
+						"description": "Authentication Failed Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"default": {
+						"description": "Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				}
+			}
 		}
 	},
 	"definitions": {
+		"SignInCredential": {
+			"type": "object",
+			"required": [
+				"email",
+				"password"
+			],
+			"properties": {
+				"email": {
+					"type": "string"
+				},
+				"password": {
+					"type": "string"
+				}
+			}
+		},
 		"User": {
 			"type": "object",
 			"required": [

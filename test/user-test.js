@@ -7,15 +7,16 @@ chai.use(chaiHttp);
 const { expect } = chai;
 const API = `/${API_VER}/auth`;
 
+const newUser = {
+  email: 'komsic@gmail.com',
+  password: 'ehfsdkfdjgjfg',
+  first_name: 'Ade',
+  last_name: 'Ola',
+};
+
 describe('User POST /auth/signup', () => {
   const signUpApi = `${API}/signup`;
 
-  const newUser = {
-    email: 'komsic@gmail.com',
-    password: 'ehfsdkfdjgjfg',
-    first_name: 'Ade',
-    last_name: 'Ola',
-  };
   it('should create a new user with 201 status code', async () => {
     const res = await chai.request(app)
       .post(signUpApi)
@@ -97,5 +98,69 @@ describe('User POST /auth/signup', () => {
     const { status, error } = res.body;
     expect(status).to.equal('error');
     expect(error).to.equal('Key (email)=(komsic@gmail.com) already exists.');
+  });
+});
+
+describe('User POST /auth/signin', () => {
+  const signInApi = `${API}/signin`;
+
+  it('should login successfully', async () => {
+    const res = await chai.request(app)
+      .post(signInApi)
+      .send({
+        email: newUser.email,
+        password: newUser.password,
+      });
+
+    expect(res).to.have.status(200);
+    const { status, data } = res.body;
+    expect(status).to.equal('success');
+    expect(data).to.be.a('object');
+    expect(data).to.have.property('is_admin');
+    expect(data).to.have.property('user_id');
+    expect(data).to.have.property('token');
+  });
+
+  it('should throw email mismatched error', async () => {
+    const res = await chai.request(app)
+      .post(signInApi)
+      .send({
+        email: 'lodf@dsdff.com',
+        password: newUser.password,
+      });
+
+    expect(res).to.have.status(422);
+    const { status, error } = res.body;
+    expect(status).to.equal('error');
+    expect(error).to.equal('Email does not exist');
+  });
+
+  it('should throw password incorrect error', async () => {
+    const res = await chai.request(app)
+      .post(signInApi)
+      .send({
+        email: newUser.email,
+        password: 'sdadfsferfffffffffff',
+      });
+
+    expect(res).to.have.status(401);
+    const { status, error } = res.body;
+    expect(status).to.equal('error');
+    expect(error).to.equal('Authentication Failed: Password is not correct');
+  });
+
+  it('should throw bad input error', async () => {
+    const res = await chai.request(app)
+      .post(signInApi)
+      .send({
+        email: newUser.email,
+        password: newUser.password,
+        last_name: 'Kolapo',
+      });
+
+    expect(res).to.have.status(400);
+    const { status } = res.body;
+    expect(status).to.equal('error');
+    expect(res.body).have.property('error');
   });
 });
