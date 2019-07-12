@@ -7,3 +7,4 @@ lcov.info
 .env
 api
 .vscode
+backend/test.js
