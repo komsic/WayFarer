@@ -3,12 +3,14 @@ import { Pool } from 'pg';
 
 config();
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+const env = process.env.NODE_ENV;
 
-// eslint-disable-next-line no-console
-pool.on('error', err => console.log(`Failed to connect to the database: ${err}`));
+const testDb = process.env.TEST_DB;
+const connectionString = (env === 'test') ? testDb : process.env.DATABASE_URL;
+
+const pool = new Pool({
+  connectionString,
+});
 
 export default {
   query: (queryText, callback) => pool.query(queryText, callback),
