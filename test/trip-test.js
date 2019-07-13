@@ -2,6 +2,9 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../backend/app';
 import { API_VER } from '../backend/utils/constants';
+import db from '../backend/db';
+import Trip from '../backend/db/models/trip';
+import trips from '../backend/db/seeders/trips.json';
 
 chai.use(chaiHttp);
 const { expect } = chai;
@@ -10,11 +13,6 @@ const API = `/${API_VER}`;
 describe('Trips Test', () => {
   let validToken;
   let unAuthorizedToken;
-  let now;
-
-  beforeEach(() => {
-    now = new Date();
-  });
 
   before(async () => {
     const res1 = await chai.request(app)
@@ -39,6 +37,11 @@ describe('Trips Test', () => {
   const tripAPI = `${API}/trips`;
 
   describe('Trip POST /trips', () => {
+    let now;
+    beforeEach(() => {
+      now = new Date();
+    });
+
     it('should create new trip', async () => {
       const res = await chai.request(app)
         .post(tripAPI)
@@ -150,6 +153,81 @@ describe('Trips Test', () => {
       const { status, error } = res.body;
       expect(status).to.equal('error');
       expect(error).to.equal('new row for relation "trips" violates check constraint "trips_check"');
+    });
+  });
+
+  describe('Trip GET /trips', () => {
+    it('should get all trips', async () => {
+      const res = await chai.request(app)
+        .get(tripAPI)
+        .send({
+          token: validToken,
+        });
+
+      expect(res).to.have.status(200);
+      const { status, data } = res.body;
+      expect(status).to.equal('success');
+      expect(data).to.be.an('array');
+      expect(data).to.have.lengthOf.above(1);
+      // expect([]).to.be.empty;
+    });
+
+    it('should return bad input', async () => {
+      const res = await chai.request(app)
+        .get(tripAPI)
+        .send({
+          nun: validToken,
+        });
+
+      expect(res).to.have.status(400);
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+    });
+
+    it('should return invalid token', async () => {
+      const res = await chai.request(app)
+        .get(tripAPI)
+        .send({
+          token: invalidToken,
+        });
+
+      expect(res).to.have.status(401);
+      const { status, error } = res.body;
+      expect(status).to.equal('error');
+      expect(error).to.equal('Authentication Error: Invalid Token');
+    });
+
+    it('should return expired token', async () => {
+      const res = await chai.request(app)
+        .get(tripAPI)
+        .send({
+          token: expiredToken,
+        });
+
+      expect(res).to.have.status(401);
+      const { status, error } = res.body;
+      expect(status).to.equal('error');
+      expect(error).to.equal('Authentication Error: Token has expired');
+    });
+
+    it('return no trip', async () => {
+      await db.query('TRUNCATE trips CASCADE');
+
+      const res = await chai.request(app)
+        .get(tripAPI)
+        .send({
+          token: validToken,
+        });
+
+      expect(res).to.have.status(200);
+      const { status, data } = res.body;
+      expect(status).to.equal('success');
+      expect(data).to.equal('There is no trip available');
+
+      for (let index = 0; index < trips.length; index += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        await Trip.createTrip(trips[index]);
+      }
     });
   });
 });
