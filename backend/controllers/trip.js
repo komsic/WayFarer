@@ -11,4 +11,16 @@ export default class TripController {
       ResponseHandler.handleError(res, error);
     }
   }
+
+  static async getTrips(req, res) {
+    let data;
+
+    try {
+      data = await TripService.getTrips();
+    } catch (error) {
+      data = error.message;
+    }
+
+    ResponseHandler.sendResponse(res, 200, false, data);
+  }
 }

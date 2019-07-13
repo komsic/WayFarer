@@ -9,4 +9,6 @@ const router = Router();
 router.post('/', Validators.validateTrip, Token.verifyToken,
   Permission.hasPermit, TripController.createTrip);
 
+router.get('/', Validators.validateToken, Token.verifyToken, TripController.getTrips);
+
 export default router;

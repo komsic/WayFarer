@@ -22,6 +22,12 @@ export default class Validators {
     next();
   }
 
+  static validateToken(req, res, next) {
+    Validators.validate(req.body.token, JoiValidator.getTokenSchema(), res);
+
+    next();
+  }
+
   static validate(data, schema, res) {
     const result = JoiValidator.validate(data, schema);
     if (result.error) {
