@@ -4,7 +4,7 @@ import JoiValidator from '.';
 export default class TripValidator {
   static getTripSchema() {
     return Joi.object({
-      token: JoiValidator.getStringSchema('token', 1000000000000000).required(),
+      token: JoiValidator.getTokenSchema(),
       bus_id: JoiValidator.getIntegerSchema('bus_id').required(),
       origin: JoiValidator.getStringSchema('origin').required(),
       destination: JoiValidator.getStringSchema('destination').required(),

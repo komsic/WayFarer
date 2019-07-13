@@ -12,6 +12,18 @@ FROM trip_result
 INNER JOIN bus
 ON trip_result.bus_id = bus.id;`;
 
+const getAllTripsQuery = `WITH available_seats AS (
+  SELECT trip_id, ARRAY_AGG (seat_number ORDER BY seat_number) available_seats
+  FROM seats
+  WHERE is_booked = FALSE
+  GROUP BY trip_id
+  ORDER BY trip_id
+)
+SELECT trips.id, trips.bus_id, trips.origin, trips.destination, trips.trip_date, trips.fare, trips.status, available_seats.available_seats
+FROM available_seats
+INNER JOIN trips
+ON available_seats.trip_id = trips.id;`;
+
 export default class Trip {
   static createTrip({
     bus_id: busId, origin, destination, trip_date: tripDate, fare,
@@ -32,5 +44,9 @@ export default class Trip {
           reject(error);
         });
     });
+  }
+
+  static getTrips() {
+    return db.query(getAllTripsQuery);
   }
 }

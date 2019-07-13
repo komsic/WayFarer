@@ -170,10 +170,71 @@
 						"token": []
 					}
 				]
+			},
+			"get": {
+				"tags": [
+					"Trip"
+				],
+				"description": "Get all trips",
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/TokenRequest"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/TripResponse"
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Input Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"401": {
+						"description": "Authentication Failed Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"default": {
+						"description": "Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"token": []
+					}
+				]
 			}
 		}
 	},
 	"definitions": {
+		"TokenRequest": {
+			"type": "object",
+			"required": [
+				"token"
+			],
+			"properties": {
+				"token": {
+					"type": "string"
+				}
+			}
+		},
 		"TripRequest": {
 			"type": "object",
 			"required": [
@@ -233,6 +294,12 @@
 				},
 				"status": {
 					"type": "string"
+				},
+				"available_seats": {
+					"type": "array",
+					"items": {
+						"type": "integer"
+					}
 				}
 			}
 		},
