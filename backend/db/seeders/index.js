@@ -7,13 +7,14 @@ import User from '../models/user';
 import Bus from '../models/bus';
 import Trip from '../models/trip';
 import Booking from '../models/booking';
+import HashPassword from '../../utils/middlewares/hash-password';
 
 const startSeeding = async () => {
   for (let index = 0; index < users.length; index += 1) {
     const {
       email, first_name: firstName, last_name: lastName, password, is_admin: isAdmin,
     } = users[index];
-    await User.createUser(email, firstName, lastName, password, isAdmin);
+    await User.createUser(email, firstName, lastName, HashPassword.hashString(password), isAdmin);
   }
 
   for (let index = 0; index < bus.length; index += 1) {
@@ -24,10 +25,7 @@ const startSeeding = async () => {
   }
 
   for (let index = 0; index < trips.length; index += 1) {
-    const {
-      bus_id: busId, origin, destination, trip_date: tripDate, fare,
-    } = trips[index];
-    await Trip.createTrip(busId, origin, destination, tripDate, fare);
+    await Trip.createTrip(trips[index]);
   }
 
   for (let index = 0; index < bookings.length; index += 1) {

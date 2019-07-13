@@ -1,6 +1,7 @@
 import JoiValidator from '../validators';
 import UserValidator from '../validators/user';
 import ResponseHandler from '../response-handler';
+import TripValidator from '../validators/trip';
 
 export default class Validators {
   static validateSignUp(req, res, next) {
@@ -13,6 +14,12 @@ export default class Validators {
     Validators.validate(req.body, UserValidator.getSignInSchema(), res);
 
     return next();
+  }
+
+  static validateTrip(req, res, next) {
+    req.body = Validators.validate(req.body, TripValidator.getTripSchema(), res);
+
+    next();
   }
 
   static validate(data, schema, res) {

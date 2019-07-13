@@ -4,7 +4,7 @@
   "description": "WayFarer is a public bus transportation booking server",
   "main": "bankend/app.js",
   "scripts": {
-    "test:pre": "npm run db:unmigrate && npm run db:migrate",
+    "test:pre": "npm run db:unmigrate && npm run db:migrate && npm run db:seed",
     "testing": "nyc --reporter=html --reporter=text mocha --timeout 10000 --require @babel/register --exit",
     "test": "set NODE_ENV=test&& npm run test:pre && npm run testing",
     "dev": "nodemon ./backend/app.js --exec babel-node",

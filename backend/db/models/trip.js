@@ -13,21 +13,24 @@ INNER JOIN bus
 ON trip_result.bus_id = bus.id;`;
 
 export default class Trip {
-  static async createTrip(busId, origin, destination, tripDate, fare) {
-    try {
-      const result = await db.query(insertQuery, [busId, origin, destination, tripDate, fare]);
-      const [{ trip_id: tripId, capacity }] = result.rows;
-      if (capacity) {
-        for (let index = 1; index <= capacity; index += 1) {
-          Seat.createSeat(tripId, index);
-        }
-      }
-      return result;
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
-    }
+  static createTrip({
+    bus_id: busId, origin, destination, trip_date: tripDate, fare,
+  }) {
+    return new Promise((resolve, reject) => {
+      db.query(insertQuery, [busId, origin, destination, tripDate, fare])
+        .then((result) => {
+          const [{ trip_id: tripId, capacity }] = result.rows;
 
-    return null;
+          for (let index = 1; index <= capacity; index += 1) {
+            Seat.createSeat(tripId, index);
+          }
+
+          resolve(resolve(result.rows[0]));
+        }).catch((err) => {
+          const error = err;
+          error.detail = err.message;
+          reject(error);
+        });
+    });
   }
 }

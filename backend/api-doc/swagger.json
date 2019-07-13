@@ -114,9 +114,128 @@
 					}
 				}
 			}
+		},
+		"/trips": {
+			"post": {
+				"tags": [
+					"Trip"
+				],
+				"description": "Create a trip",
+				"operationId": "createTrip",
+				"parameters": [
+					{
+						"in": "body",
+						"name": "trip",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/TripRequest"
+						},
+						"description": "The details of the new trip"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/TripResponse"
+						}
+					},
+					"400": {
+						"description": "Bad Input Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"401": {
+						"description": "Authentication Failed Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"403": {
+						"description": "Authorization Failed Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"default": {
+						"description": "Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"token": []
+					}
+				]
+			}
 		}
 	},
 	"definitions": {
+		"TripRequest": {
+			"type": "object",
+			"required": [
+				"token",
+				"user_id",
+				"is_admin"
+			],
+			"properties": {
+				"user_id": {
+					"type": "integer"
+				},
+				"token": {
+					"type": "string"
+				},
+				"is_admin": {
+					"type": "boolean"
+				},
+				"bus_id": {
+					"type": "integer"
+				},
+				"origin": {
+					"type": "string"
+				},
+				"destination": {
+					"type": "string"
+				},
+				"trip_date": {
+					"type": "string"
+				},
+				"fare": {
+					"type": "number",
+					"format": "double"
+				}
+			}
+		},
+		"TripResponse": {
+			"type": "object",
+			"properties": {
+				"trip_id": {
+					"type": "integer"
+				},
+				"bus_id": {
+					"type": "integer"
+				},
+				"origin": {
+					"type": "string"
+				},
+				"destination": {
+					"type": "string"
+				},
+				"trip_date": {
+					"type": "string"
+				},
+				"fare": {
+					"type": "number",
+					"format": "double"
+				},
+				"status": {
+					"type": "string"
+				}
+			}
+		},
 		"SignInCredential": {
 			"type": "object",
 			"required": [

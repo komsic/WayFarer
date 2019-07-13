@@ -2,13 +2,16 @@ import bcrypt from 'bcryptjs';
 
 export default class HashPassword {
   static hash(req, res, next) {
-    const password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(15));
-    req.body.password = password;
+    req.body.password = HashPassword.hashString(req.body.password);
 
     return next();
   }
 
   static compare(loggedInPassword, userPassword) {
     return bcrypt.compareSync(loggedInPassword, userPassword);
+  }
+
+  static hashString(data) {
+    return bcrypt.hashSync(data, bcrypt.genSaltSync(15));
   }
 }
