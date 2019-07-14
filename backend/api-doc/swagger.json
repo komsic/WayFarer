@@ -272,6 +272,65 @@
 						"token": []
 					}
 				]
+			},
+			"get": {
+				"tags": [
+					"Booking"
+				],
+				"description": "Get all bookings",
+				"operationId": "getBookings",
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/TokenRequest"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"status": {
+									"type": "string"
+								},
+								"data": {
+									"type": "array",
+									"items": {
+										"$ref": "#/definitions/BookingResponse"
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Input Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"401": {
+						"description": "Authentication Failed Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"default": {
+						"description": "Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"token": []
+					}
+				]
 			}
 		}
 	},
