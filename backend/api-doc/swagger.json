@@ -176,6 +176,7 @@
 					"Trip"
 				],
 				"description": "Get all trips",
+				"operationId": "getTrips",
 				"parameters": [
 					{
 						"in": "body",
@@ -221,9 +222,119 @@
 					}
 				]
 			}
+		},
+		"/bookings": {
+			"post": {
+				"tags": [
+					"Booking"
+				],
+				"description": "Booking a seat on a trip",
+				"operationId": "bookTrip",
+				"parameters": [
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/BookingRequest"
+						},
+						"description": "The details of the new booking"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"$ref": "#/definitions/BookingResponse"
+						}
+					},
+					"400": {
+						"description": "Bad Input Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"401": {
+						"description": "Authentication Failed Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"default": {
+						"description": "Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"token": []
+					}
+				]
+			}
 		}
 	},
 	"definitions": {
+		"BookingResponse": {
+			"type": "object",
+			"properties": {
+				"booking_id": {
+					"type": "integer"
+				},
+				"user_id": {
+					"type": "integer"
+				},
+				"trip_id": {
+					"type": "integer"
+				},
+				"bus_id": {
+					"type": "integer"
+				},
+				"seat_number": {
+					"type": "integer"
+				},
+				"trip_date": {
+					"type": "string"
+				},
+				"email": {
+					"type": "string"
+				},
+				"first_name": {
+					"type": "string"
+				},
+				"last_name": {
+					"type": "string"
+				},
+				"number_plate": {
+					"type": "string"
+				},
+				"model": {
+					"type": "string"
+				},
+				"manufacturer": {
+					"type": "string"
+				}
+			}
+		},
+		"BookingRequest": {
+			"type": "object",
+			"required": [
+				"token",
+				"trip_id"
+			],
+			"properties": {
+				"token": {
+					"type": "string"
+				},
+				"trip_id": {
+					"type": "integer"
+				},
+				"seat_number": {
+					"type": "integer"
+				}
+			}
+		},
 		"TokenRequest": {
 			"type": "object",
 			"required": [

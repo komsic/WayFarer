@@ -10,7 +10,7 @@ export default class User {
   }
 
   static findByEmail(email) {
-    return db.query(`SELECT * FROM users
+    return db.query(`SELECT id AS user_id, email, first_name, last_name, password, is_admin FROM users
     WHERE email = $1;
     `, [email]);
   }
