@@ -8,4 +8,17 @@ export default class BookingService {
         .catch(err => reject(err));
     });
   }
+
+  static getBookings(data) {
+    return new Promise((resolve, reject) => {
+      Booking.getBookings(data)
+        .then((result) => {
+          if (result.rowCount === 0) {
+            reject(new Error('No booking to show'));
+          }
+
+          resolve(result.rows);
+        });
+    });
+  }
 }

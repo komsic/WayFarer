@@ -21,6 +21,35 @@ ON seat_result.trip_id = trips.id
 INNER JOIN users
 ON seat_result.user_id = users.id;`;
 
+const selectAllBookingsQuery = `SELECT bookings.id AS booking_id, bookings.user_id, users.first_name,
+users.last_name, users.email, bookings.trip_id, trips.origin,
+trips.destination, trips.trip_date, trips.fare, trips.status, trips.bus_id,
+bus.number_plate, bus.model, bus.manufacturer, seats.seat_number
+FROM bookings
+INNER JOIN users
+ON bookings.user_id = users.id
+INNER JOIN seats
+ON bookings.seat_id = seats.id
+INNER JOIN trips
+ON bookings.trip_id = trips.id
+INNER JOIN bus
+ON trips.bus_id = bus.id;`;
+
+const selectUserBookingsQuery = `SELECT bookings.id AS booking_id, bookings.user_id, users.first_name,
+users.last_name, users.email, bookings.trip_id, trips.origin,
+trips.destination, trips.trip_date, trips.fare, trips.status, trips.bus_id,
+bus.number_plate, bus.model, bus.manufacturer, seats.seat_number
+FROM bookings
+INNER JOIN users
+ON bookings.user_id = users.id
+INNER JOIN seats
+ON bookings.seat_id = seats.id
+INNER JOIN trips
+ON bookings.trip_id = trips.id
+INNER JOIN bus
+ON trips.bus_id = bus.id
+WHERE bookings.user_id = $1;`;
+
 export default class Booking {
   static createBooking({ trip_id: tripId, user_id: userId, seat_number: seatNumber }) {
     return new Promise(async (resolve, reject) => {
@@ -43,5 +72,21 @@ export default class Booking {
         reject(new Error(`It's either the seats have all been booked or the trip with id ${tripId} doesn't exist. Also, the seat with number ${seatNumber} you requested might not exist.`));
       }
     });
+  }
+
+  static getBookings({ is_admin: isAdmin, user_id: userId }) {
+    if (isAdmin) {
+      return this.getAllBookings();
+    }
+
+    return this.getUserBookings(userId);
+  }
+
+  static getAllBookings() {
+    return db.query(selectAllBookingsQuery);
+  }
+
+  static getUserBookings(userId) {
+    return db.query(selectUserBookingsQuery, [userId]);
   }
 }

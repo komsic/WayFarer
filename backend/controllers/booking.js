@@ -11,4 +11,14 @@ export default class BookingController {
       ResponseHandler.sendResponse(res, 422, true, error.message);
     }
   }
+
+  static async getBookings(req, res) {
+    try {
+      const bookings = await BookingService.getBookings(req.body);
+
+      ResponseHandler.sendResponse(res, 200, false, bookings);
+    } catch (error) {
+      ResponseHandler.sendResponse(res, 200, false, error.message);
+    }
+  }
 }
