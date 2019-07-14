@@ -9,6 +9,8 @@ const API = `/${API_VER}`;
 
 describe('Bookings Test', () => {
   let validToken;
+  let userToken;
+  let noBookingsToken;
 
   before(async () => {
     const res1 = await chai.request(app)
@@ -18,6 +20,22 @@ describe('Bookings Test', () => {
         password: 'rand@example.com',
       });
     validToken = res1.body.data.token;
+
+    const res2 = await chai.request(app)
+      .post(`${API}/auth/signin`)
+      .send({
+        email: 'koms@gmail.com',
+        password: 'koms@gmail.com',
+      });
+    noBookingsToken = res2.body.data.token;
+
+    const res3 = await chai.request(app)
+      .post(`${API}/auth/signin`)
+      .send({
+        email: 'perrin@example.com',
+        password: 'perrin@example.com',
+      });
+    userToken = res3.body.data.token;
   });
 
   const invalidToken = 'CI6MTU2Mjc5MTY1NX0.ZbgVp170doTTZiXrBWQQmHPaWdntX8yQ_mrsxMyh6xk';
@@ -166,6 +184,86 @@ describe('Bookings Test', () => {
       expect(res).to.have.status(422);
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
+    });
+  });
+
+  describe('Booking GET /bookings', () => {
+    it('should return all bookings', async () => {
+      const res = await chai.request(app)
+        .get(bookingAPI)
+        .send({
+          token: validToken,
+        });
+
+      expect(res).to.have.status(200);
+      const { status, data } = res.body;
+      expect(status).to.equal('success');
+      expect(data).to.be.an('array');
+      expect(data).to.have.lengthOf.above(1);
+    });
+
+    it('should return only user bookings', async () => {
+      const res = await chai.request(app)
+        .get(bookingAPI)
+        .send({
+          token: userToken,
+        });
+
+      expect(res).to.have.status(200);
+      const { status, data } = res.body;
+      expect(status).to.equal('success');
+      expect(data).to.be.an('array');
+      expect(data).to.have.lengthOf.above(1);
+    });
+
+    it('should return no bookings', async () => {
+      const res = await chai.request(app)
+        .get(bookingAPI)
+        .send({
+          token: noBookingsToken,
+        });
+
+      expect(res).to.have.status(200);
+      expect(res.body.status).to.equal('success');
+      expect(res.body.data).to.equal('No booking to show');
+    });
+
+    it('bad input', async () => {
+      const res = await chai.request(app)
+        .get(bookingAPI)
+        .send({
+          nun: validToken,
+        });
+
+      expect(res).to.have.status(400);
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+    });
+
+    it('invalid token', async () => {
+      const res = await chai.request(app)
+        .get(bookingAPI)
+        .send({
+          token: invalidToken,
+        });
+
+      expect(res).to.have.status(401);
+      const { status, error } = res.body;
+      expect(status).to.equal('error');
+      expect(error).to.equal('Authentication Error: Invalid Token');
+    });
+
+    it('expired token', async () => {
+      const res = await chai.request(app)
+        .get(bookingAPI)
+        .send({
+          token: expiredToken,
+        });
+
+      expect(res).to.have.status(401);
+      const { status, error } = res.body;
+      expect(status).to.equal('error');
+      expect(error).to.equal('Authentication Error: Token has expired');
     });
   });
 });
