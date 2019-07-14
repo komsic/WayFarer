@@ -29,10 +29,7 @@ const startSeeding = async () => {
   }
 
   for (let index = 0; index < bookings.length; index += 1) {
-    const {
-      trip_id: tripId, user_id: userId, seat_id: seatId,
-    } = bookings[index];
-    await Booking.createBooking(tripId, userId, seatId);
+    await Booking.createBooking(bookings[index]);
   }
 
   // eslint-disable-next-line no-console

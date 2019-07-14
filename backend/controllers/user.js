@@ -24,7 +24,7 @@ export default class UserController {
           'Authentication Failed: Password is not correct');
       }
 
-      const { is_admin: isAdmin, id } = user;
+      const { is_admin: isAdmin, user_id: id } = user;
       const token = Token.generateToken(user);
 
       return ResponseHandler.sendResponse(res, 200, false, {

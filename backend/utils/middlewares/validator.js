@@ -2,6 +2,7 @@ import JoiValidator from '../validators';
 import UserValidator from '../validators/user';
 import ResponseHandler from '../response-handler';
 import TripValidator from '../validators/trip';
+import BookingValidator from '../validators/booking';
 
 export default class Validators {
   static validateSignUp(req, res, next) {
@@ -24,6 +25,12 @@ export default class Validators {
 
   static validateToken(req, res, next) {
     Validators.validate(req.body.token, JoiValidator.getTokenSchema(), res);
+
+    next();
+  }
+
+  static validateBooking(req, res, next) {
+    Validators.validate(req.body, BookingValidator.getBookingSchema(), res);
 
     next();
   }
