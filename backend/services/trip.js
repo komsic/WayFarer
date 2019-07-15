@@ -1,5 +1,6 @@
 import Trip from '../db/models/trip';
 import ResponseHandler from '../utils/response-handler';
+import Utility from '../utils/util';
 
 export default class TripService {
   static createTrip(trip) {
@@ -11,15 +12,7 @@ export default class TripService {
   }
 
   static getTrips() {
-    return new Promise((resolve, reject) => {
-      Trip.getTrips()
-        .then((result) => {
-          if (result.rowCount === 0) {
-            reject(new Error('There is no trip available'));
-          }
-
-          resolve(result.rows);
-        });
-    });
+    // eslint-disable-next-line new-cap
+    return new Utility.promiseGeneratorForArray(null, Trip.getTrips, 'There is no trip available');
   }
 }

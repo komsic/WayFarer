@@ -13,12 +13,24 @@ export default class BookingController {
   }
 
   static async getBookings(req, res) {
+    let data;
     try {
-      const bookings = await BookingService.getBookings(req.body);
-
-      ResponseHandler.sendResponse(res, 200, false, bookings);
+      data = await BookingService.getBookings(req.body);
     } catch (error) {
-      ResponseHandler.sendResponse(res, 200, false, error.message);
+      data = error.message;
+    }
+
+    ResponseHandler.sendResponse(res, 200, false, data);
+  }
+
+  static async deleteBooking(req, res) {
+    try {
+      const data = await BookingService.deleteBooking(req.body);
+
+      ResponseHandler.sendResponse(res, 200, false, data);
+    } catch (error) {
+      const message = error.message.split('||');
+      ResponseHandler.sendResponse(res, Number(message[0]), true, message[1]);
     }
   }
 }

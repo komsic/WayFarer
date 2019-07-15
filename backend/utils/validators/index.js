@@ -37,6 +37,13 @@ export default class JoiValidator {
     return this.getNumberSchema(label).integer();
   }
 
+  static getIdPathSchema() {
+    return Joi.object({
+      id: this.getNumberSchema('id'),
+      token: this.getTokenSchema(),
+    });
+  }
+
   static validate(data, schema) {
     return Joi.validate(data, schema, { abortEarly: false });
   }

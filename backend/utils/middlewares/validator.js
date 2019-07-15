@@ -29,6 +29,13 @@ export default class Validators {
     next();
   }
 
+  static validateIdPath(req, res, next) {
+    req.body.id = req.params.id;
+    req.body = Validators.validate(req.body, JoiValidator.getIdPathSchema(), res);
+
+    next();
+  }
+
   static validateBooking(req, res, next) {
     Validators.validate(req.body, BookingValidator.getBookingSchema(), res);
 
