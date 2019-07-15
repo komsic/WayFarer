@@ -23,4 +23,16 @@ export default class TripController {
 
     ResponseHandler.sendResponse(res, 200, false, data);
   }
+
+  static async cancelTrip(req, res) {
+    try {
+      const affectedUser = await TripService.cancelTrip(req.body);
+      ResponseHandler.sendResponse(res, 200, false, {
+        affected_user: affectedUser.rows,
+        message: 'Trip cancelled successfully',
+      });
+    } catch (err) {
+      ResponseHandler.error(err, res);
+    }
+  }
 }

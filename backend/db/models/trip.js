@@ -24,6 +24,23 @@ FROM available_seats
 INNER JOIN trips
 ON available_seats.trip_id = trips.id;`;
 
+const cancelTripQuery = `WITH trip_result AS (
+  UPDATE trips
+  SET status = 'cancelled'
+  WHERE id = $1
+  RETURNING *
+), seat_result AS (
+  SELECT bookings.user_id, ARRAY_AGG (seats.seat_number ORDER BY seats.seat_number) booked_seats FROM trip_result
+  INNER JOIN bookings
+  ON trip_result.id = bookings.trip_id
+  INNER JOIN seats
+  ON bookings.seat_id = seats.id
+  GROUP BY bookings.user_id
+)
+SELECT seat_result.user_id, seat_result.booked_seats, users.email, users.first_name, users.last_name FROM seat_result
+INNER JOIN users
+ON seat_result.user_id = users.id;`;
+
 export default class Trip {
   static createTrip({
     bus_id: busId, origin, destination, trip_date: tripDate, fare,
@@ -48,5 +65,21 @@ export default class Trip {
 
   static getTrips() {
     return db.query(getAllTripsQuery);
+  }
+
+  static cancelTrip({ id }) {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT status FROM trips WHERE id = $1', [id])
+        .then((result) => {
+          if (result.rows.length === 0) {
+            reject(new Error(`404||The trip of id ${id} does not exist`));
+          } else if (result.rows[0].status === 'cancelled') {
+            reject(new Error(`422||This trip of id ${id} has already been cancelled`));
+          }
+
+          db.query(cancelTripQuery, [id])
+            .then(res => resolve(res));
+        });
+    });
   }
 }

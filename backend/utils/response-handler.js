@@ -15,6 +15,11 @@ export default class ResponseHandler {
     this.sendResponse(res, 422, true, error.message);
   }
 
+  static error(err, res) {
+    const message = err.message.split('||');
+    this.sendResponse(res, Number(message[0]), true, message[1]);
+  }
+
   static extractError(err) {
     const { detail, code } = err;
     const error = new Error(detail);

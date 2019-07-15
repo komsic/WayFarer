@@ -12,7 +12,10 @@ export default class TripService {
   }
 
   static getTrips() {
-    // eslint-disable-next-line new-cap
-    return new Utility.promiseGeneratorForArray(null, Trip.getTrips, 'There is no trip available');
+    return Utility.promiseGeneratorForArray(null, Trip.getTrips, 'There is no trip available');
+  }
+
+  static cancelTrip(data) {
+    return Utility.promiseGenerator(data, Trip.cancelTrip);
   }
 }
