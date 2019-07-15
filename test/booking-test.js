@@ -266,4 +266,78 @@ describe('Bookings Test', () => {
       expect(error).to.equal('Authentication Error: Token has expired');
     });
   });
+
+  describe('Booking DELETE /bookings/:id', () => {
+    it('should delete the specified booking', async () => {
+      const res = await chai.request(app)
+        .delete(`${bookingAPI}/10`)
+        .send({
+          token: userToken,
+        });
+
+      expect(res).to.have.status(200);
+      expect(res.body.status).to.equal('success');
+      expect(res.body).to.have.property('data');
+    });
+
+    it('should confirm that specified booking to be deleted does not exist', async () => {
+      const res = await chai.request(app)
+        .delete(`${bookingAPI}/20`)
+        .send({
+          token: userToken,
+        });
+
+      expect(res).to.have.status(404);
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+    });
+
+    it('should display no authorization to delete the specified booking', async () => {
+      const res = await chai.request(app)
+        .delete(`${bookingAPI}/9`)
+        .send({
+          token: noBookingsToken,
+        });
+
+      expect(res).to.have.status(403);
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+    });
+
+    it('bad input', async () => {
+      const res = await chai.request(app)
+        .delete(`${bookingAPI}/10`)
+        .send({
+          nun: validToken,
+        });
+
+      expect(res).to.have.status(400);
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+    });
+
+    it('invalid token', async () => {
+      const res = await chai.request(app)
+        .delete(`${bookingAPI}/10`)
+        .send({
+          token: invalidToken,
+        });
+
+      expect(res).to.have.status(401);
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+    });
+
+    it('expired token', async () => {
+      const res = await chai.request(app)
+        .delete(`${bookingAPI}/10`)
+        .send({
+          token: expiredToken,
+        });
+
+      expect(res).to.have.status(401);
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+    });
+  });
 });

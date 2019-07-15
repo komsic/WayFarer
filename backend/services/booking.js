@@ -1,24 +1,17 @@
 import Booking from '../db/models/booking';
+import Utility from '../utils/util';
 
 export default class BookingService {
   static bookTrip(booking) {
-    return new Promise((resolve, reject) => {
-      Booking.createBooking(booking)
-        .then(data => resolve(data))
-        .catch(err => reject(err));
-    });
+    return Utility.promiseGenerator(booking, Booking.createBooking);
   }
 
   static getBookings(data) {
-    return new Promise((resolve, reject) => {
-      Booking.getBookings(data)
-        .then((result) => {
-          if (result.rowCount === 0) {
-            reject(new Error('No booking to show'));
-          }
+    // eslint-disable-next-line new-cap
+    return new Utility.promiseGeneratorForArray(data, Booking.getBookings, 'No booking to show');
+  }
 
-          resolve(result.rows);
-        });
-    });
+  static deleteBooking(data) {
+    return Utility.promiseGenerator(data, Booking.deleteBooking);
   }
 }

@@ -50,6 +50,8 @@ INNER JOIN bus
 ON trips.bus_id = bus.id
 WHERE bookings.user_id = $1;`;
 
+const deleteQuery = 'DELETE FROM bookings WHERE id = $1 AND user_id = $2;';
+
 export default class Booking {
   static createBooking({ trip_id: tripId, user_id: userId, seat_number: seatNumber }) {
     return new Promise(async (resolve, reject) => {
@@ -74,12 +76,30 @@ export default class Booking {
     });
   }
 
+  static deleteBooking({ id, user_id: userId }) {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT * FROM bookings WHERE id = $1;', [id])
+        .then((result) => {
+          if (result.rowCount === 0) {
+            reject(new Error(`404||Booking of id ${id} does not exist`));
+          }
+
+          if (result.rows[0].user_id !== userId) {
+            reject(new Error(`403||User with id ${userId} does not have authorization to to delete booking of id ${id}`));
+          }
+
+          db.query(deleteQuery, [id, userId])
+            .then(() => resolve('Booking deleted successfully'));
+        });
+    });
+  }
+
   static getBookings({ is_admin: isAdmin, user_id: userId }) {
     if (isAdmin) {
-      return this.getAllBookings();
+      return Booking.getAllBookings();
     }
 
-    return this.getUserBookings(userId);
+    return Booking.getUserBookings(userId);
   }
 
   static getAllBookings() {

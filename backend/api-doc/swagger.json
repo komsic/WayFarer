@@ -332,6 +332,71 @@
 					}
 				]
 			}
+		},
+		"/bookings/{bookingId}": {
+			"delete": {
+				"tags": [
+					"Booking"
+				],
+				"description": "Delete a booking",
+				"operationId": "deleteBooking",
+				"parameters": [
+					{
+						"name": "bookingId",
+						"in": "path",
+						"description": "ID of booking to return",
+						"required": true,
+						"type": "integer"
+					},
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/TokenRequest"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"status": {
+									"type": "string"
+								},
+								"data": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Input Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"401": {
+						"description": "Authentication Failed Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"default": {
+						"description": "Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"token": []
+					}
+				]
+			}
 		}
 	},
 	"definitions": {
@@ -401,6 +466,17 @@
 			],
 			"properties": {
 				"token": {
+					"type": "string"
+				}
+			}
+		},
+		"PathIdResponse": {
+			"type": "object",
+			"required": [
+				"data"
+			],
+			"properties": {
+				"data": {
 					"type": "string"
 				}
 			}
