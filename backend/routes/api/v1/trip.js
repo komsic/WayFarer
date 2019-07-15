@@ -10,5 +10,7 @@ router.post('/', Validators.validateTrip, Token.verifyToken,
   Permission.hasPermit, TripController.createTrip);
 
 router.get('/', Validators.validateToken, Token.verifyToken, TripController.getTrips);
+router.patch('/:id', Validators.validateIdPath, Token.verifyToken,
+  Permission.hasPermit, TripController.cancelTrip);
 
 export default router;

@@ -39,7 +39,7 @@ export default class JoiValidator {
 
   static getIdPathSchema() {
     return Joi.object({
-      id: this.getNumberSchema('id'),
+      id: this.getNumberSchema('id').required(),
       token: this.getTokenSchema(),
     });
   }

@@ -36,6 +36,103 @@ describe('Trips Test', () => {
   const expiredToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhbmRAZXhhbXBsZS5jb20iLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE1NjI3NjAyNjksImV4cCI6MTU2Mjg0NjY2OX0.bxaNT_-1ZEKQBwTQcS99aggj4R8NTmg2GjSVesF_i8Q';
   const tripAPI = `${API}/trips`;
 
+  describe('Trip PATCH /trips/:tripId', () => {
+    before(async () => {
+      await chai.request(app)
+        .patch(`${tripAPI}/1`)
+        .send({
+          token: validToken,
+        });
+    });
+
+    it('should cancel the trip', async () => {
+      const res = await chai.request(app)
+        .patch(`${tripAPI}/2`)
+        .send({
+          token: validToken,
+        });
+
+      expect(res).to.have.status(200);
+      const { status, data } = res.body;
+      const { affected_user: affectedUser, message } = data;
+      expect(status).to.equal('success');
+      expect(message).to.equal('Trip cancelled successfully');
+      expect(affectedUser).to.be.an('array');
+    });
+
+    it('should return that trip has already been cancelled', async () => {
+      const res = await chai.request(app)
+        .patch(`${tripAPI}/1`)
+        .send({
+          token: validToken,
+        });
+
+      expect(res).to.have.status(422);
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+    });
+
+    it('should return that the trip does not exist', async () => {
+      const res = await chai.request(app)
+        .patch(`${tripAPI}/10`)
+        .send({
+          token: validToken,
+        });
+
+      expect(res).to.have.status(404);
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+    });
+
+    it('should return bad input error', async () => {
+      const res = await chai.request(app)
+        .patch(`${tripAPI}/1`)
+        .send({
+          nin: validToken,
+        });
+
+      expect(res).to.have.status(400);
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+    });
+
+    it('should return invalid token error', async () => {
+      const res = await chai.request(app)
+        .patch(`${tripAPI}/1`)
+        .send({
+          token: invalidToken,
+        });
+
+      expect(res).to.have.status(401);
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+    });
+
+    it('should return expired token error', async () => {
+      const res = await chai.request(app)
+        .patch(`${tripAPI}/1`)
+        .send({
+          token: expiredToken,
+        });
+
+      expect(res).to.have.status(401);
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+    });
+
+    it('should return authorization error', async () => {
+      const res = await chai.request(app)
+        .patch(`${tripAPI}/1`)
+        .send({
+          token: unAuthorizedToken,
+        });
+
+      expect(res).to.have.status(403);
+      expect(res.body.status).to.equal('error');
+      expect(res.body).to.have.property('error');
+    });
+  });
+
   describe('Trip POST /trips', () => {
     let now;
     beforeEach(() => {
@@ -168,8 +265,7 @@ describe('Trips Test', () => {
       const { status, data } = res.body;
       expect(status).to.equal('success');
       expect(data).to.be.an('array');
-      expect(data).to.have.lengthOf.above(1);
-      // expect([]).to.be.empty;
+      expect(data).to.have.lengthOf.above(0);
     });
 
     it('should return bad input', async () => {

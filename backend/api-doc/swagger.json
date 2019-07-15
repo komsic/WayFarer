@@ -223,6 +223,77 @@
 				]
 			}
 		},
+		"/trips/{tripId}": {
+			"patch": {
+				"tags": [
+					"Trip"
+				],
+				"description": "Cancel a trip",
+				"operationId": "cancelTrip",
+				"parameters": [
+					{
+						"name": "tripId",
+						"in": "path",
+						"description": "ID of trip to cancel",
+						"required": true,
+						"type": "integer"
+					},
+					{
+						"in": "body",
+						"name": "body",
+						"required": true,
+						"schema": {
+							"$ref": "#/definitions/TokenRequest"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"schema": {
+							"type": "object",
+							"properties": {
+								"status": {
+									"type": "string"
+								},
+								"data": {
+									"$ref": "#/definitions/TripCancelledResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Input Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"401": {
+						"description": "Authentication Failed Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"403": {
+						"description": "Authorization Failed Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					},
+					"default": {
+						"description": "Error",
+						"schema": {
+							"$ref": "#/definitions/ErrorResponse"
+						}
+					}
+				},
+				"security": [
+					{
+						"token": []
+					}
+				]
+			}
+		},
 		"/bookings": {
 			"post": {
 				"tags": [
@@ -353,7 +424,7 @@
 						"name": "body",
 						"required": true,
 						"schema": {
-							"$ref": "#/definitions/TokenRequest"
+							"$ref": "#/definitions/PathIdResponse"
 						}
 					}
 				],
@@ -400,6 +471,43 @@
 		}
 	},
 	"definitions": {
+		"TripCancelledResponse": {
+			"type": "object",
+			"properties": {
+				"message": {
+					"type": "string"
+				},
+				"affected_users": {
+					"type": "array",
+					"items": {
+						"$ref": "#/definitions/AffectedUser"
+					}
+				}
+			}
+		},
+		"AffectedUser": {
+			"type": "object",
+			"properties": {
+				"user_id": {
+					"type": "integer"
+				},
+				"email": {
+					"type": "string"
+				},
+				"first_name": {
+					"type": "string"
+				},
+				"last_name": {
+					"type": "string"
+				},
+				"booked_seats": {
+					"type": "array",
+					"items": {
+						"type": "integer"
+					}
+				}
+			}
+		},
 		"BookingResponse": {
 			"type": "object",
 			"properties": {

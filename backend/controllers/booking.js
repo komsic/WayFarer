@@ -29,8 +29,7 @@ export default class BookingController {
 
       ResponseHandler.sendResponse(res, 200, false, data);
     } catch (error) {
-      const message = error.message.split('||');
-      ResponseHandler.sendResponse(res, Number(message[0]), true, message[1]);
+      ResponseHandler.error(error, res);
     }
   }
 }
