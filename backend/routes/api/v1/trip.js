@@ -9,7 +9,9 @@ const router = Router();
 router.post('/', Validators.validateTrip, Token.verifyToken,
   Permission.hasPermit, TripController.createTrip);
 
-router.get('/', Validators.validateToken, Token.verifyToken, TripController.getTrips);
+router.get('/', Validators.validateGetTrips, Token.verifyToken,
+  TripController.getTrips);
+
 router.patch('/:id', Validators.validateIdPath, Token.verifyToken,
   Permission.hasPermit, TripController.cancelTrip);
 

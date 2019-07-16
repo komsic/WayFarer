@@ -17,6 +17,17 @@ export default class Validators {
     Validators.validate(req, res, next, req.body, TripValidator.getTripSchema());
   }
 
+  static validateGetTrips(req, res, next) {
+    const keys = Object.keys(req.query);
+    if (keys.length !== 0) {
+      keys.forEach((key) => {
+        req.body[key] = req.query[key];
+      });
+    }
+
+    Validators.validate(req, res, next, req.body, TripValidator.getQueryTripsSchema());
+  }
+
   static validateToken(req, res, next) {
     Validators.validate(req, res, next, req.body, JoiValidator.getTokenSchemaAsObject());
   }
