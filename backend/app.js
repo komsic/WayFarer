@@ -3,7 +3,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDoc from './api-doc/swagger.json';
+import swaggerDoc from '../swagger.json';
 import { REDIRECT_MESSAGE } from './utils/constants';
 import routes from './routes';
 
