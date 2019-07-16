@@ -154,7 +154,6 @@ describe('User POST /auth/signin', () => {
       .post(signInApi)
       .send({
         email: newUser.email,
-        password: newUser.password,
         last_name: 'Kolapo',
       });
 

@@ -6,7 +6,7 @@ export default class JoiValidator {
   }
 
   static getEmailSchema() {
-    return this.getStringSchema('email', 150).email();
+    return this.getStringSchema('email', 150).email().lowercase();
   }
 
   static getPasswordSchema() {
@@ -15,6 +15,12 @@ export default class JoiValidator {
 
   static getTokenSchema() {
     return this.getStringSchema('token', 100000).required();
+  }
+
+  static getTokenSchemaAsObject() {
+    return Joi.object({
+      token: this.getTokenSchema(),
+    });
   }
 
   static getBooleanSchema() {
@@ -45,7 +51,11 @@ export default class JoiValidator {
   }
 
   static validate(data, schema) {
-    return Joi.validate(data, schema, { abortEarly: false });
+    return Joi.validate(data, schema, {
+      allowUnknown: true,
+      stripUnknown: true,
+      abortEarly: false,
+    });
   }
 
   static extractErrors(error) {

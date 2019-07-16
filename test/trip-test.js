@@ -155,7 +155,7 @@ describe('Trips Test', () => {
       const { status, data } = res.body;
       expect(status).to.equal('success');
       expect(data).to.be.a('object');
-      expect(data).to.have.property('trip_id');
+      expect(data).to.have.property('id');
       expect(data).to.have.property('bus_id');
       expect(data).to.have.property('origin');
       expect(data).to.have.property('destination');

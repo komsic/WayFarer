@@ -55,7 +55,7 @@ describe('Bookings Test', () => {
       const { status, data } = res.body;
       expect(status).to.equal('success');
       expect(data).to.be.a('object');
-      expect(data).to.have.property('booking_id');
+      expect(data).to.have.property('id');
       expect(data).to.have.property('bus_id');
       expect(data).to.have.property('user_id');
       expect(data).to.have.property('trip_id');
@@ -79,7 +79,7 @@ describe('Bookings Test', () => {
       const { status, data } = res.body;
       expect(status).to.equal('success');
       expect(data).to.be.a('object');
-      expect(data).to.have.property('booking_id');
+      expect(data).to.have.property('id');
       expect(data).to.have.property('bus_id');
       expect(data).to.have.property('user_id');
       expect(data).to.have.property('trip_id');
