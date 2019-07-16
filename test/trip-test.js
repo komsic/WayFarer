@@ -268,6 +268,20 @@ describe('Trips Test', () => {
       expect(data).to.have.lengthOf.above(0);
     });
 
+    it('should get all trips', async () => {
+      const res = await chai.request(app)
+        .get(`${tripAPI}?destination=beere&origin=olodo`)
+        .send({
+          token: validToken,
+        });
+
+      expect(res).to.have.status(200);
+      const { status, data } = res.body;
+      expect(status).to.equal('success');
+      expect(data).to.be.an('array');
+      expect(data).to.have.lengthOf.above(0);
+    });
+
     it('should return bad input', async () => {
       const res = await chai.request(app)
         .get(tripAPI)
