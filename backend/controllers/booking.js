@@ -25,7 +25,10 @@ export default class BookingController {
 
   static async deleteBooking(req, res) {
     try {
-      const data = await BookingService.deleteBooking(req.body);
+      let data = await BookingService.deleteBooking(req.body);
+      data = {
+        message: data,
+      };
 
       ResponseHandler.sendResponse(res, 200, false, data);
     } catch (error) {
