@@ -24,6 +24,19 @@ FROM available_seats
 INNER JOIN trips
 ON available_seats.trip_id = trips.id;`;
 
+const getAllTripsQueryByFilter = `WITH available_seats AS (
+  SELECT trip_id, ARRAY_AGG (seat_number ORDER BY seat_number) available_seats
+  FROM seats
+  WHERE is_booked = FALSE
+  GROUP BY trip_id
+  ORDER BY trip_id
+)
+SELECT trips.id, trips.bus_id, trips.origin, trips.destination, trips.trip_date, trips.fare, trips.status, available_seats.available_seats
+FROM available_seats
+INNER JOIN trips
+ON available_seats.trip_id = trips.id
+WHERE trips.origin = $1 OR trips.destination = $2;`;
+
 const cancelTripQuery = `WITH trip_result AS (
   UPDATE trips
   SET status = 'cancelled'
@@ -63,8 +76,12 @@ export default class Trip {
     });
   }
 
-  static getTrips() {
-    return db.query(getAllTripsQuery);
+  static getTrips({ origin, destination }) {
+    if (origin == null && destination == null) {
+      return db.query(getAllTripsQuery);
+    }
+
+    return db.query(getAllTripsQueryByFilter, [origin, destination]);
   }
 
   static cancelTrip({ id }) {

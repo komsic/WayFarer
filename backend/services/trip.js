@@ -11,8 +11,8 @@ export default class TripService {
     });
   }
 
-  static getTrips() {
-    return Utility.promiseGeneratorForArray(null, Trip.getTrips, 'There is no trip available');
+  static getTrips(data) {
+    return Utility.promiseGeneratorForArray(data, Trip.getTrips, 'There is no trip available');
   }
 
   static cancelTrip(data) {

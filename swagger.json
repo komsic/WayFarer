@@ -179,6 +179,16 @@
 				"operationId": "getTrips",
 				"parameters": [
 					{
+						"in": "query",
+						"name": "origin",
+						"type": "string"
+					},
+					{
+						"in": "query",
+						"name": "destination",
+						"type": "string"
+					},
+					{
 						"in": "body",
 						"name": "body",
 						"required": true,

@@ -16,7 +16,7 @@ export default class TripController {
     let data;
 
     try {
-      data = await TripService.getTrips();
+      data = await TripService.getTrips(req.body);
     } catch (error) {
       data = error.message;
     }
