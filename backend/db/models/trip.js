@@ -6,7 +6,7 @@ const insertQuery = `WITH trip_result AS (
   VALUES ($1, $2, $3, $4, $5)
   RETURNING *
 )
-SELECT trip_result.id AS trip_id, trip_result.bus_id, trip_result.origin,
+SELECT trip_result.id, trip_result.bus_id, trip_result.origin,
 trip_result.destination, trip_result.trip_date, trip_result.fare, bus.capacity
 FROM trip_result
 INNER JOIN bus
@@ -48,7 +48,7 @@ export default class Trip {
     return new Promise((resolve, reject) => {
       db.query(insertQuery, [busId, origin, destination, tripDate, fare])
         .then((result) => {
-          const [{ trip_id: tripId, capacity }] = result.rows;
+          const [{ id: tripId, capacity }] = result.rows;
 
           for (let index = 1; index <= capacity; index += 1) {
             Seat.createSeat(tripId, index);

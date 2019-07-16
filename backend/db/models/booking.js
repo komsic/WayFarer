@@ -13,7 +13,7 @@ const insertQuery = `WITH booking_result AS (
   AND seats.trip_id = booking_result.trip_id
   RETURNING booking_result.id, booking_result.trip_id, booking_result.user_id, seats.seat_number
 )
-SELECT seat_result.id AS booking_id, seat_result.user_id, seat_result.trip_id, trips.bus_id,
+SELECT seat_result.id, seat_result.user_id, seat_result.trip_id, trips.bus_id,
 trips.trip_date, seat_result.seat_number, users.first_name, users.last_name, users.email
 FROM seat_result
 INNER JOIN trips
