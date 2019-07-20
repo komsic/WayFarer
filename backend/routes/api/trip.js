@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import Validators from '../../../utils/middlewares/validator';
-import Token from '../../../utils/middlewares/token';
-import TripController from '../../../controllers/trip';
-import Permission from '../../../utils/middlewares/permission';
+import Validators from '../../utils/middlewares/validator';
+import Token from '../../utils/middlewares/token';
+import TripController from '../../controllers/trip';
+import Permission from '../../utils/middlewares/permission';
 
 const router = Router();
 

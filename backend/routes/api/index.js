@@ -1,8 +1,12 @@
 import express from 'express';
-import v1 from './v1';
+import user from './user';
+import trip from './trip';
+import booking from './booking';
 
 const router = express.Router();
 
-router.use('/v1', v1);
+router.use('/auth', user);
+router.use('/trips', trip);
+router.use('/bookings', booking);
 
 export default router;
