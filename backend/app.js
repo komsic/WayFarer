@@ -1,4 +1,4 @@
-import '@babel/polyfill';
+import regeneratorRuntime from 'regenerator-runtime';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';

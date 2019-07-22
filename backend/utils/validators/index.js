@@ -2,7 +2,7 @@ import Joi from '@hapi/joi';
 
 export default class JoiValidator {
   static getStringSchema(label, max = 100) {
-    return Joi.string().max(max).label(label);
+    return Joi.string().trim().max(max).label(label);
   }
 
   static getEmailSchema() {
