@@ -6,9 +6,9 @@ export default class BookingController {
     try {
       const booking = await BookingService.bookTrip(req.body);
 
-      ResponseHandler.sendResponse(res, 201, false, booking);
+      return ResponseHandler.sendResponse(res, 201, false, booking);
     } catch (error) {
-      ResponseHandler.sendResponse(res, 422, true, error.message);
+      return ResponseHandler.sendResponse(res, 422, true, error.message);
     }
   }
 
@@ -20,7 +20,7 @@ export default class BookingController {
       data = error.message;
     }
 
-    ResponseHandler.sendResponse(res, 200, false, data);
+    return ResponseHandler.sendResponse(res, 200, false, data);
   }
 
   static async deleteBooking(req, res) {
@@ -30,9 +30,9 @@ export default class BookingController {
         message: data,
       };
 
-      ResponseHandler.sendResponse(res, 200, false, data);
+      return ResponseHandler.sendResponse(res, 200, false, data);
     } catch (error) {
-      ResponseHandler.error(error, res);
+      return ResponseHandler.error(error, res);
     }
   }
 }

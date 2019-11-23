@@ -9,9 +9,9 @@ export default class UserController {
       const user = await UserService.createNewUser(req.body);
       user.token = Token.generateToken(user);
 
-      ResponseHandler.sendResponse(res, 201, false, user);
+      return ResponseHandler.sendResponse(res, 201, false, user);
     } catch (error) {
-      ResponseHandler.handleError(res, error);
+      return ResponseHandler.handleError(res, error);
     }
   }
 
@@ -33,9 +33,7 @@ export default class UserController {
         user_id: id,
       });
     } catch (error) {
-      ResponseHandler.handleError(res, error);
+      return ResponseHandler.handleError(res, error);
     }
-
-    return null;
   }
 }

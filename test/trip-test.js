@@ -40,17 +40,13 @@ describe('Trips Test', () => {
     before(async () => {
       await chai.request(app)
         .patch(`${tripAPI}/1`)
-        .send({
-          token: validToken,
-        });
+        .set('authorization', validToken);
     });
 
     it('should cancel the trip', async () => {
       const res = await chai.request(app)
         .patch(`${tripAPI}/2`)
-        .send({
-          token: validToken,
-        });
+        .set('authorization', `Bearer ${validToken}`);
 
       expect(res).to.have.status(200);
       const { status, data } = res.body;
@@ -63,9 +59,7 @@ describe('Trips Test', () => {
     it('should return that trip has already been cancelled', async () => {
       const res = await chai.request(app)
         .patch(`${tripAPI}/1`)
-        .send({
-          token: validToken,
-        });
+        .set('authorization', validToken);
 
       expect(res).to.have.status(422);
       expect(res.body.status).to.equal('error');
@@ -75,23 +69,9 @@ describe('Trips Test', () => {
     it('should return that the trip does not exist', async () => {
       const res = await chai.request(app)
         .patch(`${tripAPI}/10`)
-        .send({
-          token: validToken,
-        });
+        .set('authorization', validToken);
 
       expect(res).to.have.status(404);
-      expect(res.body.status).to.equal('error');
-      expect(res.body).to.have.property('error');
-    });
-
-    it('should return bad input error', async () => {
-      const res = await chai.request(app)
-        .patch(`${tripAPI}/1`)
-        .send({
-          nin: validToken,
-        });
-
-      expect(res).to.have.status(400);
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
     });
@@ -99,9 +79,7 @@ describe('Trips Test', () => {
     it('should return invalid token error', async () => {
       const res = await chai.request(app)
         .patch(`${tripAPI}/1`)
-        .send({
-          token: invalidToken,
-        });
+        .set('authorization', invalidToken);
 
       expect(res).to.have.status(401);
       expect(res.body.status).to.equal('error');
@@ -111,9 +89,7 @@ describe('Trips Test', () => {
     it('should return expired token error', async () => {
       const res = await chai.request(app)
         .patch(`${tripAPI}/1`)
-        .send({
-          token: expiredToken,
-        });
+        .set('authorization', expiredToken);
 
       expect(res).to.have.status(401);
       expect(res.body.status).to.equal('error');
@@ -123,9 +99,7 @@ describe('Trips Test', () => {
     it('should return authorization error', async () => {
       const res = await chai.request(app)
         .patch(`${tripAPI}/1`)
-        .send({
-          token: unAuthorizedToken,
-        });
+        .set('authorization', unAuthorizedToken);
 
       expect(res).to.have.status(403);
       expect(res.body.status).to.equal('error');
@@ -142,8 +116,8 @@ describe('Trips Test', () => {
     it('should create new trip', async () => {
       const res = await chai.request(app)
         .post(tripAPI)
+        .set('authorization', validToken)
         .send({
-          token: validToken,
           bus_id: 1,
           origin: 'Knowhere',
           destination: 'Asgard',
@@ -167,8 +141,8 @@ describe('Trips Test', () => {
     it('should return invalid token', async () => {
       const res = await chai.request(app)
         .post(tripAPI)
+        .set('authorization', invalidToken)
         .send({
-          token: invalidToken,
           bus_id: 1,
           origin: 'Knowhere',
           destination: 'Asgard',
@@ -185,8 +159,8 @@ describe('Trips Test', () => {
     it('should return expired token', async () => {
       const res = await chai.request(app)
         .post(tripAPI)
+        .set('authorization', expiredToken)
         .send({
-          token: expiredToken,
           bus_id: 1,
           origin: 'Knowhere',
           destination: 'Asgard',
@@ -203,8 +177,8 @@ describe('Trips Test', () => {
     it('should return unauthorized permission', async () => {
       const res = await chai.request(app)
         .post(tripAPI)
+        .set('authorization', unAuthorizedToken)
         .send({
-          token: unAuthorizedToken,
           bus_id: 1,
           origin: 'Knowhere',
           destination: 'Asgard',
@@ -221,8 +195,8 @@ describe('Trips Test', () => {
     it('should return bad request', async () => {
       const res = await chai.request(app)
         .post(tripAPI)
+        .set('authorization', validToken)
         .send({
-          token: validToken,
           bus_id: 1,
           destination: 'Asgard',
           trip_date: new Date(now.setDate(now.getDate() + 6)),
@@ -237,8 +211,8 @@ describe('Trips Test', () => {
     it('should return trip_date conflict', async () => {
       const res = await chai.request(app)
         .post(tripAPI)
+        .set('authorization', validToken)
         .send({
-          token: validToken,
           bus_id: 1,
           origin: 'Knowhere',
           destination: 'Asgard',
@@ -257,9 +231,7 @@ describe('Trips Test', () => {
     it('should get all trips', async () => {
       const res = await chai.request(app)
         .get(tripAPI)
-        .send({
-          token: validToken,
-        });
+        .set('authorization', validToken);
 
       expect(res).to.have.status(200);
       const { status, data } = res.body;
@@ -271,9 +243,7 @@ describe('Trips Test', () => {
     it('should get all trips', async () => {
       const res = await chai.request(app)
         .get(`${tripAPI}?destination=beere&origin=olodo`)
-        .send({
-          token: validToken,
-        });
+        .set('authorization', validToken);
 
       expect(res).to.have.status(200);
       const { status, data } = res.body;
@@ -282,24 +252,10 @@ describe('Trips Test', () => {
       expect(data).to.have.lengthOf.above(0);
     });
 
-    it('should return bad input', async () => {
-      const res = await chai.request(app)
-        .get(tripAPI)
-        .send({
-          nun: validToken,
-        });
-
-      expect(res).to.have.status(400);
-      expect(res.body.status).to.equal('error');
-      expect(res.body).to.have.property('error');
-    });
-
     it('should return invalid token', async () => {
       const res = await chai.request(app)
         .get(tripAPI)
-        .send({
-          token: invalidToken,
-        });
+        .set('authorization', invalidToken);
 
       expect(res).to.have.status(401);
       const { status, error } = res.body;
@@ -310,9 +266,7 @@ describe('Trips Test', () => {
     it('should return expired token', async () => {
       const res = await chai.request(app)
         .get(tripAPI)
-        .send({
-          token: expiredToken,
-        });
+        .set('authorization', expiredToken);
 
       expect(res).to.have.status(401);
       const { status, error } = res.body;
@@ -325,9 +279,7 @@ describe('Trips Test', () => {
 
       const res = await chai.request(app)
         .get(tripAPI)
-        .send({
-          token: validToken,
-        });
+        .set('authorization', validToken);
 
       expect(res).to.have.status(200);
       const { status, data } = res.body;

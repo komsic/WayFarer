@@ -67,11 +67,11 @@ export default class Trip {
             Seat.createSeat(tripId, index);
           }
 
-          resolve(resolve(result.rows[0]));
+          return resolve(resolve(result.rows[0]));
         }).catch((err) => {
           const error = err;
           error.detail = err.message;
-          reject(error);
+          return reject(error);
         });
     });
   }
@@ -89,12 +89,12 @@ export default class Trip {
       db.query('SELECT status FROM trips WHERE id = $1', [id])
         .then((result) => {
           if (result.rows.length === 0) {
-            reject(new Error(`404||The trip of id ${id} does not exist`));
-          } else if (result.rows[0].status === 'cancelled') {
-            reject(new Error(`422||This trip of id ${id} has already been cancelled`));
+            return reject(new Error(`404||The trip of id ${id} does not exist`));
+          } if (result.rows[0].status === 'cancelled') {
+            return reject(new Error(`422||This trip of id ${id} has already been cancelled`));
           }
 
-          db.query(cancelTripQuery, [id])
+          return db.query(cancelTripQuery, [id])
             .then(res => resolve(res));
         });
     });

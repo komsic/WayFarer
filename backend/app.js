@@ -1,14 +1,18 @@
-import regeneratorRuntime from 'regenerator-runtime';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import morganBody from 'morgan-body';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDoc from '../swagger.json';
 import { REDIRECT_MESSAGE } from './utils/constants';
 import routes from './routes';
 
 const app = express();
-app.use(cors('*'));
+if (process.env.NODE_ENV !== 'test') {
+  morganBody(app, { prettify: true });
+}
+
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -25,6 +29,7 @@ app.use('*', (_req, res) => {
 });
 
 const PORT = process.env.PORT || 9001;
+// eslint-disable-next-line no-console
 app.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));
 
 export default app;

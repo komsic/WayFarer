@@ -8,3 +8,4 @@ lcov.info
 api
 .vscode
 backend/test.js
+yarn.lock

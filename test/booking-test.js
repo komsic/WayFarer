@@ -46,8 +46,8 @@ describe('Bookings Test', () => {
     it('should book a trip without seat number', async () => {
       const res = await chai.request(app)
         .post(bookingAPI)
+        .set('authorization', validToken)
         .send({
-          token: validToken,
           trip_id: 1,
         });
 
@@ -69,8 +69,8 @@ describe('Bookings Test', () => {
     it('should book a trip with seat number', async () => {
       const res = await chai.request(app)
         .post(bookingAPI)
+        .set('authorization', validToken)
         .send({
-          token: validToken,
           trip_id: 1,
           seat_number: 15,
         });
@@ -93,8 +93,8 @@ describe('Bookings Test', () => {
     it('should return bad input', async () => {
       const res = await chai.request(app)
         .post(bookingAPI)
+        .set('authorization', validToken)
         .send({
-          token: validToken,
           seat_number: 15,
         });
 
@@ -106,8 +106,8 @@ describe('Bookings Test', () => {
     it('should return invalid token', async () => {
       const res = await chai.request(app)
         .post(bookingAPI)
+        .set('authorization', invalidToken)
         .send({
-          token: invalidToken,
           trip_id: 1,
         });
 
@@ -120,8 +120,8 @@ describe('Bookings Test', () => {
     it('should return expired token', async () => {
       const res = await chai.request(app)
         .post(bookingAPI)
+        .set('authorization', expiredToken)
         .send({
-          token: expiredToken,
           trip_id: 1,
         });
 
@@ -134,8 +134,8 @@ describe('Bookings Test', () => {
     it('should return trip does not exist', async () => {
       const res = await chai.request(app)
         .post(bookingAPI)
+        .set('authorization', validToken)
         .send({
-          token: validToken,
           trip_id: 8,
         });
 
@@ -147,8 +147,8 @@ describe('Bookings Test', () => {
     it('should book a seat does not exist', async () => {
       const res = await chai.request(app)
         .post(bookingAPI)
+        .set('authorization', validToken)
         .send({
-          token: validToken,
           trip_id: 3,
           seat_number: 8,
         });
@@ -161,8 +161,8 @@ describe('Bookings Test', () => {
     it('should not book a seat has already been booked', async () => {
       const res = await chai.request(app)
         .post(bookingAPI)
+        .set('authorization', validToken)
         .send({
-          token: validToken,
           trip_id: 3,
           seat_number: 4,
         });
@@ -176,8 +176,8 @@ describe('Bookings Test', () => {
     it('should not book a trip when all seats have been booked', async () => {
       const res = await chai.request(app)
         .post(bookingAPI)
+        .set('authorization', validToken)
         .send({
-          token: validToken,
           trip_id: 3,
         });
 
@@ -191,9 +191,7 @@ describe('Bookings Test', () => {
     it('should return all bookings', async () => {
       const res = await chai.request(app)
         .get(bookingAPI)
-        .send({
-          token: validToken,
-        });
+        .set('authorization', validToken);
 
       expect(res).to.have.status(200);
       const { status, data } = res.body;
@@ -205,9 +203,7 @@ describe('Bookings Test', () => {
     it('should return only user bookings', async () => {
       const res = await chai.request(app)
         .get(bookingAPI)
-        .send({
-          token: userToken,
-        });
+        .set('authorization', userToken);
 
       expect(res).to.have.status(200);
       const { status, data } = res.body;
@@ -219,33 +215,17 @@ describe('Bookings Test', () => {
     it('should return no bookings', async () => {
       const res = await chai.request(app)
         .get(bookingAPI)
-        .send({
-          token: noBookingsToken,
-        });
+        .set('authorization', noBookingsToken);
 
       expect(res).to.have.status(200);
       expect(res.body.status).to.equal('success');
       expect(res.body.data).to.equal('No booking to show');
     });
 
-    it('bad input', async () => {
-      const res = await chai.request(app)
-        .get(bookingAPI)
-        .send({
-          nun: validToken,
-        });
-
-      expect(res).to.have.status(400);
-      expect(res.body.status).to.equal('error');
-      expect(res.body).to.have.property('error');
-    });
-
     it('invalid token', async () => {
       const res = await chai.request(app)
         .get(bookingAPI)
-        .send({
-          token: invalidToken,
-        });
+        .set('authorization', invalidToken);
 
       expect(res).to.have.status(401);
       const { status, error } = res.body;
@@ -256,9 +236,7 @@ describe('Bookings Test', () => {
     it('expired token', async () => {
       const res = await chai.request(app)
         .get(bookingAPI)
-        .send({
-          token: expiredToken,
-        });
+        .set('authorization', expiredToken);
 
       expect(res).to.have.status(401);
       const { status, error } = res.body;
@@ -271,9 +249,7 @@ describe('Bookings Test', () => {
     it('should delete the specified booking', async () => {
       const res = await chai.request(app)
         .delete(`${bookingAPI}/10`)
-        .send({
-          token: userToken,
-        });
+        .set('authorization', userToken);
 
       expect(res).to.have.status(200);
       expect(res.body.status).to.equal('success');
@@ -283,9 +259,7 @@ describe('Bookings Test', () => {
     it('should confirm that specified booking to be deleted does not exist', async () => {
       const res = await chai.request(app)
         .delete(`${bookingAPI}/20`)
-        .send({
-          token: userToken,
-        });
+        .set('authorization', userToken);
 
       expect(res).to.have.status(404);
       expect(res.body.status).to.equal('error');
@@ -295,23 +269,9 @@ describe('Bookings Test', () => {
     it('should display no authorization to delete the specified booking', async () => {
       const res = await chai.request(app)
         .delete(`${bookingAPI}/9`)
-        .send({
-          token: noBookingsToken,
-        });
+        .set('authorization', noBookingsToken);
 
       expect(res).to.have.status(403);
-      expect(res.body.status).to.equal('error');
-      expect(res.body).to.have.property('error');
-    });
-
-    it('bad input', async () => {
-      const res = await chai.request(app)
-        .delete(`${bookingAPI}/10`)
-        .send({
-          nun: validToken,
-        });
-
-      expect(res).to.have.status(400);
       expect(res.body.status).to.equal('error');
       expect(res.body).to.have.property('error');
     });
@@ -319,9 +279,7 @@ describe('Bookings Test', () => {
     it('invalid token', async () => {
       const res = await chai.request(app)
         .delete(`${bookingAPI}/10`)
-        .send({
-          token: invalidToken,
-        });
+        .set('authorization', invalidToken);
 
       expect(res).to.have.status(401);
       expect(res.body.status).to.equal('error');
@@ -331,9 +289,7 @@ describe('Bookings Test', () => {
     it('expired token', async () => {
       const res = await chai.request(app)
         .delete(`${bookingAPI}/10`)
-        .send({
-          token: expiredToken,
-        });
+        .set('authorization', expiredToken);
 
       expect(res).to.have.status(401);
       expect(res.body.status).to.equal('error');

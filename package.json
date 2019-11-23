@@ -2,7 +2,7 @@
   "name": "wayfarer",
   "version": "1.0.0",
   "description": "WayFarer is a public bus transportation booking server",
-  "main": "bankend/app.js",
+  "main": "backend/app.js",
   "scripts": {
     "test:pre": "npm run db:unmigrate && npm run db:migrate && npm run db:seed",
     "testing": "nyc --reporter=html --reporter=text mocha --timeout 20000 --require @babel/register --exit",
@@ -45,16 +45,18 @@
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "morgan-body": "^2.4.8",
     "pg": "^7.11.0",
-    "regenerator-runtime": "^0.13.3",
     "swagger-ui-express": "^4.0.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.0",
     "@babel/core": "^7.5.0",
     "@babel/node": "^7.5.0",
+    "@babel/plugin-transform-runtime": "^7.7.4",
     "@babel/preset-env": "^7.5.0",
     "@babel/register": "^7.4.4",
+    "@babel/runtime": "^7.7.4",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "codeclimate-test-reporter": "^0.5.1",
@@ -68,7 +70,7 @@
     "nyc": "^14.1.1"
   },
   "engines": {
-    "node": "10.15.2",
+    "node": "10.16.3",
     "npm": "6.9.0"
   }
 }

@@ -7,11 +7,8 @@ export default class UserService {
   }) {
     return new Promise((resolve, reject) => {
       User.createUser(email, firstName, lastName, password, isAdmin)
-        .then((data) => {
-          resolve(data.rows[0]);
-        }).catch((err) => {
-          reject(ResponseHandler.extractError(err));
-        });
+        .then(data => resolve(data.rows[0]))
+        .catch(err => reject(ResponseHandler.extractError(err)));
     });
   }
 
@@ -20,9 +17,9 @@ export default class UserService {
       User.findByEmail(email)
         .then((data) => {
           if (data.rowCount === 0) {
-            reject(new Error('Email does not exist'));
+            return reject(new Error('Email does not exist'));
           }
-          resolve(data.rows[0]);
+          return resolve(data.rows[0]);
         });
     });
   }

@@ -6,15 +6,15 @@ import BookingValidator from '../validators/booking';
 
 export default class Validators {
   static validateSignUp(req, res, next) {
-    Validators.validate(req, res, next, UserValidator.getSignUpSchema());
+    return Validators.validate(req, res, next, UserValidator.getSignUpSchema());
   }
 
   static validateSignIn(req, res, next) {
-    Validators.validate(req, res, next, UserValidator.getSignInSchema());
+    return Validators.validate(req, res, next, UserValidator.getSignInSchema());
   }
 
   static validateTrip(req, res, next) {
-    Validators.validate(req, res, next, TripValidator.getTripSchema());
+    return Validators.validate(req, res, next, TripValidator.getTripSchema());
   }
 
   static validateGetTrips(req, res, next) {
@@ -25,20 +25,16 @@ export default class Validators {
       });
     }
 
-    Validators.validate(req, res, next, TripValidator.getQueryTripsSchema());
-  }
-
-  static validateToken(req, res, next) {
-    Validators.validate(req, res, next, JoiValidator.getTokenSchemaAsObject());
+    return Validators.validate(req, res, next, TripValidator.getQueryTripsSchema());
   }
 
   static validateIdPath(req, res, next) {
     req.body.id = req.params.id;
-    Validators.validate(req, res, next, JoiValidator.getIdPathSchema());
+    return Validators.validate(req, res, next, JoiValidator.getIdPathSchema());
   }
 
   static validateBooking(req, res, next) {
-    Validators.validate(req, res, next, BookingValidator.getBookingSchema());
+    return Validators.validate(req, res, next, BookingValidator.getBookingSchema());
   }
 
   static validate(req, res, next, schema) {
@@ -46,10 +42,10 @@ export default class Validators {
     if (result.error) {
       const error = JoiValidator.extractErrors(result.error);
 
-      ResponseHandler.sendResponse(res, 400, true, error);
-    } else {
-      req.body = result.value;
-      next();
+      return ResponseHandler.sendResponse(res, 400, true, error);
     }
+
+    req.body = result.value;
+    return next();
   }
 }

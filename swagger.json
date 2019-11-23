@@ -2,12 +2,13 @@
 	"swagger": "2.0",
 	"info": {
 		"version": "1.0.0",
-		"title": "WayFarer API Documentation"
+    "title": "WayFarer API Documentation",
+    "description": "Welcome to the Wayfarer documentation page. WayFarer is a public bus transportation booking server. The server allows admin users to create a trip which the normal users can book. Any trip can be cancelled by an admin. Also, a normal user can delete any of their bookings.\n\nThis page describes each of the endpoints and also provide a way to consume them.\n\n##### HOW TO GET STARTED\n- Sign in or sign up\n- Copy the token from the sign in or sign up api response\n- Click on the **Authorize** button or any of the lock buttons\n- Paste the token on the **value** field\n- Access any of the endpoints (NB - some endpoints require admin privilege, so you need to be an admin user before you can consume them)"
 	},
-	"host": "localhost:9001",
-	"basePath": "/",
+	"basePath": "/api/v1",
 	"schemes": [
-		"http"
+    "https",
+    "http"
 	],
 	"consumes": [
 		"application/json"
@@ -16,11 +17,11 @@
 		"application/json"
 	],
 	"securityDefinitions": {
-		"token": {
-			"type": "apiKey",
-			"name": "token",
-			"in": "header"
-		}
+		"bearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "headers"
+    }
 	},
 	"paths": {
 		"/auth/signup": {
@@ -28,7 +29,8 @@
 				"tags": [
 					"User"
 				],
-				"description": "Create user account",
+        "description": "Create user account",
+        "summary": "Register as a user",
 				"operationId": "signUp",
 				"parameters": [
 					{
@@ -75,6 +77,7 @@
 					"User"
 				],
 				"description": "Login a user",
+        "summary": "Login as a user",
 				"operationId": "signIn",
 				"parameters": [
 					{
@@ -120,7 +123,8 @@
 				"tags": [
 					"Trip"
 				],
-				"description": "Create a trip",
+				"description": "Create a trip (Only an admin can perform this operation)",
+        "summary": "Create a trip",
 				"operationId": "createTrip",
 				"parameters": [
 					{
@@ -167,7 +171,7 @@
 				},
 				"security": [
 					{
-						"token": []
+						"bearerAuth": []
 					}
 				]
 			},
@@ -176,6 +180,7 @@
 					"Trip"
 				],
 				"description": "Get all trips",
+        "summary": "Get all the trips",
 				"operationId": "getTrips",
 				"parameters": [
 					{
@@ -187,14 +192,6 @@
 						"in": "query",
 						"name": "destination",
 						"type": "string"
-					},
-					{
-						"in": "body",
-						"name": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/TokenRequest"
-						}
 					}
 				],
 				"responses": {
@@ -228,7 +225,7 @@
 				},
 				"security": [
 					{
-						"token": []
+						"bearerAuth": []
 					}
 				]
 			}
@@ -238,7 +235,8 @@
 				"tags": [
 					"Trip"
 				],
-				"description": "Cancel a trip",
+				"description": "Cancel a trip (Only an admin can perform this operation)",
+        "summary": "Cancel a trip",
 				"operationId": "cancelTrip",
 				"parameters": [
 					{
@@ -247,14 +245,6 @@
 						"description": "ID of trip to cancel",
 						"required": true,
 						"type": "integer"
-					},
-					{
-						"in": "body",
-						"name": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/TokenRequest"
-						}
 					}
 				],
 				"responses": {
@@ -299,7 +289,7 @@
 				},
 				"security": [
 					{
-						"token": []
+						"bearerAuth": []
 					}
 				]
 			}
@@ -309,7 +299,8 @@
 				"tags": [
 					"Booking"
 				],
-				"description": "Booking a seat on a trip",
+				"description": "Book a seat on a trip",
+        "summary": "Book a seat on a trip",
 				"operationId": "bookTrip",
 				"parameters": [
 					{
@@ -350,7 +341,7 @@
 				},
 				"security": [
 					{
-						"token": []
+						"bearerAuth": []
 					}
 				]
 			},
@@ -358,18 +349,9 @@
 				"tags": [
 					"Booking"
 				],
-				"description": "Get all bookings",
+				"description": "Get bookings. Return all the booking for an admin and only the user's bookings for non-admin",
+        "summary": "Get bookings",
 				"operationId": "getBookings",
-				"parameters": [
-					{
-						"in": "body",
-						"name": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/TokenRequest"
-						}
-					}
-				],
 				"responses": {
 					"200": {
 						"description": "OK",
@@ -409,7 +391,7 @@
 				},
 				"security": [
 					{
-						"token": []
+						"bearerAuth": []
 					}
 				]
 			}
@@ -419,7 +401,8 @@
 				"tags": [
 					"Booking"
 				],
-				"description": "Delete a booking",
+				"description": "Delete a booking (Users can only delete that belong to them)",
+        "summary": "Delete a booking",
 				"operationId": "deleteBooking",
 				"parameters": [
 					{
@@ -428,14 +411,6 @@
 						"description": "ID of booking to return",
 						"required": true,
 						"type": "integer"
-					},
-					{
-						"in": "body",
-						"name": "body",
-						"required": true,
-						"schema": {
-							"$ref": "#/definitions/PathIdResponse"
-						}
 					}
 				],
 				"responses": {
@@ -474,7 +449,7 @@
 				},
 				"security": [
 					{
-						"token": []
+						"bearerAuth": []
 					}
 				]
 			}
@@ -562,13 +537,9 @@
 		"BookingRequest": {
 			"type": "object",
 			"required": [
-				"token",
 				"trip_id"
 			],
 			"properties": {
-				"token": {
-					"type": "string"
-				},
 				"trip_id": {
 					"type": "integer"
 				},
@@ -601,36 +572,28 @@
 		},
 		"TripRequest": {
 			"type": "object",
-			"required": [
-				"token",
-				"user_id",
-				"is_admin"
-			],
 			"properties": {
-				"user_id": {
-					"type": "integer"
-				},
-				"token": {
-					"type": "string"
-				},
-				"is_admin": {
-					"type": "boolean"
-				},
 				"bus_id": {
-					"type": "integer"
+          "type": "integer",
+          "example": 1
 				},
 				"origin": {
-					"type": "string"
+          "type": "string",
+          "example": "Asgard"
 				},
 				"destination": {
-					"type": "string"
+          "type": "string",
+          "example": "Knowhere"
 				},
 				"trip_date": {
-					"type": "string"
+          "type": "string",
+          "format": "date",
+          "example": "2020-04-01"
 				},
 				"fare": {
 					"type": "number",
-					"format": "double"
+          "format": "double",
+          "example": 70000
 				}
 			}
 		},
@@ -693,22 +656,28 @@
 			],
 			"properties": {
 				"id": {
-					"type": "integer"
+          "type": "integer",
+          "readOnly": true
 				},
 				"email": {
-					"type": "string"
+          "type": "string",
+          "example": "loki@example.com"
 				},
 				"password": {
-					"type": "string"
+					"type": "string",
+          "example": "FearThanos"
 				},
 				"first_name": {
-					"type": "string"
+					"type": "string",
+          "example": "Loki"
 				},
 				"last_name": {
-					"type": "string"
+					"type": "string",
+          "example": "Laufeyson"
 				},
 				"is_admin": {
-					"type": "boolean"
+					"type": "boolean",
+          "example": false
 				}
 			}
 		},

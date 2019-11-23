@@ -65,13 +65,13 @@ export default class Booking {
 
         const [{ seat_id: seatId, is_booked: isBooked }] = seat.rows;
         if (isBooked) {
-          reject(new Error(`The seat with number ${seatNumber} has already been booked`));
+          return reject(new Error(`The seat with number ${seatNumber} has already been booked`));
         }
 
-        db.query(insertQuery, [tripId, userId, seatId])
+        return db.query(insertQuery, [tripId, userId, seatId])
           .then(result => resolve(result.rows[0]));
       } catch (error) {
-        reject(new Error(`It's either the seats have all been booked or the trip with id ${tripId} doesn't exist. Also, the seat with number ${seatNumber} you requested might not exist.`));
+        return reject(new Error(`It's either the seats have all been booked or the trip with id ${tripId} doesn't exist. Also, the seat with number ${seatNumber} you requested might not exist.`));
       }
     });
   }
@@ -81,14 +81,14 @@ export default class Booking {
       db.query('SELECT * FROM bookings WHERE id = $1;', [id])
         .then((result) => {
           if (result.rowCount === 0) {
-            reject(new Error(`404||Booking of id ${id} does not exist`));
+            return reject(new Error(`404||Booking of id ${id} does not exist`));
           }
 
           if (result.rows[0].user_id !== userId) {
-            reject(new Error(`403||User with id ${userId} does not have authorization to to delete booking of id ${id}`));
+            return reject(new Error(`403||User with id ${userId} does not have authorization to to delete booking of id ${id}`));
           }
 
-          db.query(deleteQuery, [id, userId])
+          return db.query(deleteQuery, [id, userId])
             .then(() => resolve('Booking deleted successfully'));
         });
     });

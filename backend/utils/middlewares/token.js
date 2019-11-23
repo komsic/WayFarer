@@ -8,19 +8,24 @@ export default class Token {
 
   static verifyToken(req, res, next) {
     try {
-      const decodedToken = jwt.verify(req.body.token, process.env.SECRET_KEY);
+      const token = req.headers.authorization.split(' ');
+      let jwtToken = token[1];
+      // eslint-disable-next-line prefer-destructuring
+      if (token.length === 1) jwtToken = token[0];
+
+      const decodedToken = jwt.verify(jwtToken, process.env.SECRET_KEY);
       const { isAdmin, userId } = decodedToken;
       req.body.is_admin = isAdmin;
       req.body.user_id = userId;
 
-      next();
+      return next();
     } catch (error) {
       let message = 'Authentication Error: Invalid Token';
       if (error instanceof jwt.TokenExpiredError) {
         message = 'Authentication Error: Token has expired';
       }
 
-      ResponseHandler.sendResponse(res, 401, true, message);
+      return ResponseHandler.sendResponse(res, 401, true, message);
     }
   }
 }

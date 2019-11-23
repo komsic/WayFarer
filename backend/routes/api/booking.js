@@ -6,7 +6,7 @@ import BookingController from '../../controllers/booking';
 const router = Router();
 
 router.post('/', Validators.validateBooking, Token.verifyToken, BookingController.bookTrip);
-router.get('/', Validators.validateToken, Token.verifyToken, BookingController.getBookings);
+router.get('/', Token.verifyToken, BookingController.getBookings);
 router.delete('/:id', Validators.validateIdPath, Token.verifyToken, BookingController.deleteBooking);
 
 export default router;

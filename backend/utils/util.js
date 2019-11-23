@@ -12,10 +12,10 @@ export default class Utility {
       fun(data)
         .then((result) => {
           if (result.rowCount === 0) {
-            reject(new Error(errorMessage));
+            return reject(new Error(errorMessage));
           }
 
-          resolve(result.rows);
+          return resolve(result.rows);
         });
     });
   }

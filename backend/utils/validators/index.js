@@ -13,16 +13,6 @@ export default class JoiValidator {
     return this.getStringSchema('password', 150).min(8);
   }
 
-  static getTokenSchema() {
-    return this.getStringSchema('token', 100000).required();
-  }
-
-  static getTokenSchemaAsObject() {
-    return Joi.object({
-      token: this.getTokenSchema(),
-    });
-  }
-
   static getBooleanSchema() {
     return Joi.boolean().label('is_admin');
   }
@@ -46,7 +36,6 @@ export default class JoiValidator {
   static getIdPathSchema() {
     return Joi.object({
       id: this.getNumberSchema('id').required(),
-      token: this.getTokenSchema(),
     });
   }
 
